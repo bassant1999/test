@@ -1,0 +1,495 @@
+{% extends "book_heaven/layout.html" %}
+
+{% block title %} Search{% endblock %}
+
+{% block body %}
+<script>
+
+    let counter = 10;
+    const quantity = 11;
+    let dbcounter = 0;
+    let dbquantity = 0;
+
+
+
+
+    function add_fbook(contents) {
+        // alert("contents")
+        const fbooks_div = document.getElementById("fbooks_div");
+        const fbook_div = document.createElement('div');
+
+
+        if (contents.Image_url) {
+            img = document.createElement('img');
+            img.src = contents.Image_url;
+            img.alt = "book_image";
+            img.setAttribute("style", "width:200px; height: 300px;");
+            fbook_div.appendChild(img);
+        }
+        if (contents.title) {
+            title = document.createElement('div');
+            title.innerHTML = `Title : ${contents.title}`
+            fbook_div.appendChild(title);
+        }
+
+
+        if (contents.Authors) {
+            author = document.createElement('div');
+            author.innerHTML = `Authors : ${contents.Authors}`
+            fbook_div.appendChild(author);
+        }
+        if (contents.Download_count) {
+            d_count = document.createElement('div');
+            d_count.innerHTML = `Number of Downloads: ${contents.Download_count}`
+            fbook_div.appendChild(d_count);
+        }
+        view = document.createElement('a');
+        view.setAttribute('href', `../free_book/${contents.id}`);
+        view.textContent = "view";
+        // alert(view.href);
+        fbook_div.appendChild(view);
+
+        fbooks_div.appendChild(fbook_div)
+
+    };
+
+    function add_pbook(contents) {
+
+        const pbooks_div = document.getElementById("pbooks_div");
+        const pbook_div = document.createElement('div');
+
+
+        if (contents.Image_url) {
+            img = document.createElement('img');
+            img.src = contents.Image_url;
+            img.alt = "book_image";
+            img.setAttribute("style", "width:200px; height: 300px;");
+
+            pbook_div.appendChild(img);
+        }
+        if (contents.title) {
+            title = document.createElement('div');
+            title.innerHTML = `Title : ${contents.title}`
+            pbook_div.appendChild(title);
+        }
+
+
+        if (contents.Authors) {
+            author = document.createElement('div');
+            author.innerHTML = `Authors : ${contents.Authors}`
+            pbook_div.appendChild(author);
+        }
+        if (contents.Average_rating) {
+            avg_rating = document.createElement('div');
+            avg_rating.innerHTML = `Average rating : ${contents.Average_rating}`
+            pbook_div.appendChild(avg_rating);
+        }
+
+        view = document.createElement('a');
+        view.setAttribute('href', `../paid_book/${contents.id}`);
+        view.textContent = "view";
+        pbook_div.appendChild(view);
+
+        pbooks_div.appendChild(pbook_div)
+
+    };
+    // Load next set of books
+    function load(searched) {
+
+        const start = counter;
+        const end = start + quantity - 1;
+        counter = end + 1;
+
+        const dbstart = dbcounter;
+        const dbend = dbstart + quantity - 1;
+        dbcounter = dbend + 1;
+
+        const div_ele = document.querySelector(".search_results");
+        const fbooks_div = document.createElement('div');
+        fbooks_div.setAttribute("id", "fbooks_div");
+        fbooks_div.setAttribute("class", "hidden");
+        fbooks_div.setAttribute("class", "col-md-6");
+        div_ele.appendChild(fbooks_div);
+        const pbooks_div = document.createElement('div');
+        pbooks_div.setAttribute("id", "pbooks_div");
+        pbooks_div.setAttribute("class", "col-md-6");
+        pbooks_div.setAttribute("class", "hidden");
+        div_ele.appendChild(pbooks_div);
+        ffbooks = JSON.parse('{{ fall|escapejs }}');
+        ppbooks = JSON.parse('{{ pall|escapejs }}');
+        dbffbooks = JSON.parse('{{ dbfall|escapejs }}');
+        dbppbooks = JSON.parse('{{ dbpall|escapejs }}');
+        // alert(ffbooks[0].Authors)
+        const cfbooks_div = document.getElementById("fbooks_div");
+        const cpbooks_div = document.getElementById("pbooks_div");
+        if (cfbooks_div.classList.contains("visible")) {
+            if (((start == 10) && (ffbooks.length < 10))) {
+                // const fbooks_div = document.getElementById("fbooks_div");
+
+                // sdataset = document.createElement('p');
+                // const node = document.createTextNode("Search results from all dataset");
+                // sdataset.appendChild(node);
+
+                // fbooks_div.appendChild(sdataset);
+
+                if (ffbooks.length == 0) {
+                    dbcounter = 0;
+                }
+                else { dbcounter = 10; }
+                dbquantity = 11;
+            }
+            if ((start <= ffbooks.length)) {
+
+                for (let i = start; i < end; i++) {
+                    if (ffbooks[i]) {
+                        add_fbook(ffbooks[i]);
+                    }
+                }
+                if ((end >= ffbooks.length)) {
+                    // alert(start)
+                    // alert(ffbooks.length)
+                    const fbooks_div = document.getElementById("fbooks_div");
+                    sdataset = document.createElement('p');
+                    const node = document.createTextNode("Search results from all dataset");
+                    sdataset.appendChild(node);
+                    fbooks_div.appendChild(sdataset);
+                    dbcounter = 10;
+                    dbquantity = 11;
+                }
+            }
+            else {
+                if (dbstart <= dbffbooks.length) {
+
+                    for (let i = dbstart; i < dbend; i++) {
+                        if (dbffbooks[i]) {
+                            add_fbook(dbffbooks[i]);
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+
+        if (cpbooks_div.classList.contains("visible")) {
+            if (((start == 10) && (ppbooks.length < 10))) {
+                // const pbooks_div = document.getElementById("pbooks_div");
+
+                // sdataset = document.createElement('p');
+                // const node = document.createTextNode("Search results from all dataset");
+                // sdataset.appendChild(node);
+
+                // pbooks_div.appendChild(sdataset);
+
+                if (ffbooks.length == 0) {
+                    dbcounter = 0;
+                }
+                else { dbcounter = 10; }
+                dbquantity = 11;
+            }
+            if ((start <= ppbooks.length)) {
+
+                for (let i = start; i < end; i++) {
+                    if (ppbooks[i]) {
+                        add_pbook(ppbooks[i]);
+                    }
+                }
+                if ((end >= ppbooks.length)) {
+                    // alert(start)
+                    // alert(ffbooks.length)
+                    const pbooks_div = document.getElementById("pbooks_div");
+                    sdataset = document.createElement('p');
+                    const node = document.createTextNode("Search results from all dataset");
+                    sdataset.appendChild(node);
+                    pbooks_div.appendChild(sdataset);
+                    dbcounter = 10;
+                    dbquantity = 11;
+                }
+            }
+            else {
+                if (dbstart <= dbppbooks.length) {
+
+                    for (let i = dbstart; i < dbend; i++) {
+                        if (dbppbooks[i]) {
+                            add_pbook(dbppbooks[i]);
+                        }
+                    }
+
+                }
+
+
+            }
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function () {
+        if (document.querySelector(".search_results")) {
+            div_ele = document.querySelector(".search_results")
+            searched = div_ele.id
+            console.log("88888888")
+            // alert(div_ele)
+            window.onscroll = () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    load(searched);
+                }
+            };
+        }
+    });
+
+    function show_pbooks() {
+        const pbooks = document.getElementById("btn_pbooks");
+        const fbooks = document.getElementById("btn_fbooks");
+        // pbooks.classList.remove("btn btn-secondary");
+        // pbooks.classList.add("btn btn-primary");
+        // fbooks.classList.add("btn btn-secondary");
+        // fbooks.classList.remove("btn btn-primary");
+        
+        const fbooks_div = document.getElementById("fbooks_div");
+        const pbooks_div = document.getElementById("pbooks_div");
+        pbooks_div.classList.remove("hidden");
+        fbooks_div.classList.add("hidden");
+        fbooks_div.classList.remove("visible");
+        pbooks_div.classList.add("visible");
+    }
+
+    function show_fbooks() {
+        const pbooks = document.getElementById("btn_pbooks");
+        const fbooks = document.getElementById("btn_fbooks");
+        // pbooks.classList.add("btn btn-secondary");
+        // pbooks.classList.remove("btn btn-primary");
+        // fbooks.classList.remove("btn btn-secondary");
+        // fbooks.classList.add("btn btn-primary");
+
+        const fbooks_div = document.getElementById("fbooks_div");
+        const pbooks_div = document.getElementById("pbooks_div");
+        fbooks_div.classList.remove("hidden");
+        pbooks_div.classList.add("hidden");
+        pbooks_div.classList.remove("visible");
+        fbooks_div.classList.add("visible");
+    }
+
+
+
+
+
+
+</script>
+
+<style>
+    .hidden {
+        display: None;
+    }
+
+    .visible {
+        display: block;
+    }
+</style>
+
+<form action="{% url 'search' %}" method="post">
+    {% csrf_token %}
+    {% if searched_value %}
+    <input type="text" , name="searched" , placeholder="Search by title or author" value="{{searched_value}}">
+    {% else %}
+    <input type="text" , name="searched" , placeholder="Search by title or author">
+    {% endif %}
+    <input type="submit" , value="Search">
+</form>
+<br />
+<br />
+{% if searched_value %}
+<div>
+    You searched for {{searched_value}}
+    <br />
+    <br />
+    <button onclick="show_pbooks()" id="btn_pbooks" class="btn btn-secondary">Paid books</button>
+    <button onclick="show_fbooks()" id="btn_fbooks" class="btn btn-secondary">Free books</button>
+</div>
+<div id="{{searched_value}}" class="search_results row">
+
+    <div id="pbooks_div" class="col-md-6 hidden">
+        Paid books
+        <br />
+        <br />
+        {% if pbooks|length > 0 %}
+        <p>Your recommended search results </p>
+        <br />
+        {% for pbook in pbooks %}
+        <div>
+            {% if pbook.Image_url%}
+            <img src={{pbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+            <br />
+            {% endif %}
+            {% if pbook.title %}
+            Title : {{pbook.title}}
+            <br />
+            {% endif %}
+            {% if pbook.Authors%}
+            Author : {{pbook.Authors}}
+            <br />
+            {% endif %}
+            {%if pbook.Average_rating%}
+            Average_rating : {{pbook.Average_rating}}
+            <br />
+            {% endif %}
+            <a href="{% url 'paid_book' pbook.id %}">View</a>
+            <br />
+            <br />
+        </div>
+        {% endfor %}
+        {% if pbooks|length < 10 %} <b> Search results from all dataset</b>
+            <br />
+            {% for dbpbook in dbpbooks %}
+            <div>
+                {% if dbpbook.Image_url%}
+                <img src={{dbpbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <br />
+                {% endif %}
+                {% if dbpbook.title %}
+                Title : {{dbpbook.title}}
+                <br />
+                {% endif %}
+                {% if dbpbook.Authors%}
+                Author : {{dbpbook.Authors}}
+                <br />
+                {% endif %}
+                {%if dbpbook.Average_rating%}
+                Average_rating : {{dbpbook.Average_rating}}
+                <br />
+                {% endif %}
+                <a href="{% url 'paid_book' dbpbook.id %}">View</a>
+                <br />
+                <br />
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% else %}
+            <p>Unfortunately, no recommended search results </p>
+            <br />
+            {% if dbpbooks|length > 0 %}
+            <b> Search results from all dataset</b>
+            <br />
+            {% for dbpbook in dbpbooks %}
+            <div>
+                {% if dbpbook.Image_url%}
+                <img src={{dbpbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <br />
+                {% endif %}
+                {% if dbpbook.title %}
+                Title : {{dbpbook.title}}
+                <br />
+                {% endif %}
+                {% if dbpbook.Authors%}
+                Author : {{dbpbook.Authors}}
+                <br />
+                {% endif %}
+                {%if dbpbook.Average_rating%}
+                Average_rating : {{dbpbook.Average_rating}}
+                <br />
+                {% endif %}
+                <a href="{% url 'paid_book' dbpbook.id %}">View</a>
+                <br />
+                <br />
+            </div>
+            {% endfor %}
+            {% else %}
+            <b> Unfortunately, no search results from all dataset</b>
+            <br />
+            {% endif %}
+            {% endif %}
+    </div>
+
+    <div id="fbooks_div" class="col-md-6 hidden">
+        Free books
+        <br />
+        <br />
+        {% if fbooks|length > 0 %}
+        <p>Your recommended search results </p>
+        <br />
+        {% for fbook in fbooks %}
+        <div>
+            {% if fbook.Image_url%}
+            <img src={{fbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+            <br />
+            {% endif %}
+            {% if fbook.title %}
+            Title : {{fbook.title}}
+            <br />
+            {% endif %}
+            {% if fbook.Authors %}
+            Author : {{fbook.Authors}}
+            <br />
+            {% endif %}
+            {% if fbook.Download_count %}
+            Number of Downloads: {{fbook.Download_count}}
+            <br />
+            {% endif %}
+            <a href="{% url 'free_book' fbook.id %}">View</a>
+            <br />
+            <br />
+        </div>
+        {% endfor %}
+        {% if fbooks|length < 10 %} <b> Search results from all dataset</b>
+            <br />
+            {% for dbfbook in dbfbooks %}
+            <div>
+                {% if dbfbook.Image_url%}
+                <img src={{dbfbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <br />
+                {% endif %}
+                {% if dbfbook.title %}
+                Title : {{dbfbook.title}}
+                <br />
+                {% endif %}
+                {% if dbfbook.Authors %}
+                Author : {{dbfbook.Authors}}
+                <br />
+                {% endif %}
+                {% if dbfbook.Download_count %}
+                Number of Downloads: {{dbfbook.Download_count}}
+                <br />
+                {% endif %}
+                <a href="{% url 'free_book' dbfbook.id %}">View</a>
+                <br />
+                <br />
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% else %}
+            <p>Unfortunately, no recommended search results </p>
+            <br />
+            {% if dbfbooks|length > 0 %}
+            <b> Search results from all dataset</b>
+            <br />
+            {% for dbfbook in dbfbooks %}
+            <div>
+                {% if dbfbook.Image_url%}
+                <img src={{dbfbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <br />
+                {% endif %}
+                {% if dbfbook.title %}
+                Title : {{dbfbook.title}}
+                <br />
+                {% endif %}
+                {% if dbfbook.Authors %}
+                Author : {{dbfbook.Authors}}
+                <br />
+                {% endif %}
+                {% if dbfbook.Download_count %}
+                Number of Downloads: {{dbfbook.Download_count}}
+                <br />
+                {% endif %}
+                <a href="{% url 'free_book' dbfbook.id %}">View</a>
+                <br />
+                <br />
+            </div>
+            {% endfor %}
+            {% else %}
+            <b> Unfortunately, no search results from all dataset</b>
+            <br />
+            {% endif %}
+            {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+body {
+    background-image: url('background.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+#start_body {
+    background-image: url('book1.png');
+    /* background-size:cover;
+    background-repeat:no-repeat; */
+    /* background-position:center ; */
+    background-attachment: fixed;
+    background-size: 100% 100%;
+}
+/* paid book css */
+.a_review_fbook
+{
+    border: 2px outset rgb(197, 194, 194);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    width:90%;
+}
+
+.time
+{
+    color: gray;
+}
+/* end of paid book css */
+
+/* trial */
+.hi
+{
+    border: 2px outset rgb(197, 194, 194);
+}

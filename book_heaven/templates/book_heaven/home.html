@@ -1,0 +1,64 @@
+{% extends "book_heaven/layout.html" %}
+
+{% block title %}  Home{% endblock %}
+
+{% block body %}
+    {% if user.is_authenticated %}  
+        <div>
+            <!-- Library starts -->
+            <div>
+                <h1>My Library</h1>
+                
+            </div>
+            <!-- Library Ends -->
+
+            <!-- Recommendations starts -->
+            <div>
+                <h1>Recommendations</h1>
+                <h2>Books</h2>
+                <div>
+                    <a class="btn btn-primary" href="{% url 'home' %}" role="button">Free Books</a>
+                    <a class="btn btn-secondary" href="{% url 'home_paid_books' %}" role="button">Paid Books</a>    
+                </div>
+                <!-- recommended free books -->
+                <div>
+                    {% for free_book in recomended_free_books %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if free_book.Image_url %}
+                                    <img src="{{free_book.Image_url}}" alt ="image">
+                                {% else %}
+                                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALEAAAB2CAMAAACwGoL7AAAAMFBMVEXm5uazs7PU1NS8vLzKysqvr6/Hx8fCwsLp6enh4eHb29u3t7fPz8/e3t7Y2Njt7e3PoZk0AAABV0lEQVR4nO3a7WqDMBSA4URz9PhRvf+7XeI2t3/mwNhJyvtCSwsVnobYRkwIRERERERERETknnoDjJ1rmsfnUvleul8vXb26zBIrkukSp/JhWV3BWxU4xi/xpR8cxctW521GrFPlCDcjXmq9rYh1+BGNXYhDukHr+TClGxFP9wjnNzNixIgRI0aMGPE/iXXXzsSvuPYlPpPkR0/iIFFCT+K0S3nqSDyXS5Rt7kj8K8SIESNGjBgxYsSIETcm3roT5wv7+puRbYjl6e5Yc2JLiBG/hfjwF4upuHiLtzRYchzhT7FMi9ryFs+np8BaEb+sBx2O07iIR+MhOor4nnlmsbjuE9rzD4VxwHzF4cjzeLCd+87iUNbEi4nsLNah7NDbTRPDeYyvSyXZKvbG3jnv2wxatzW2mbVbaYhWs5j/dP421XVPplyXQt/oblZCRERERERERESU+wAfwxl7V33Q+QAAAABJRU5ErkJggg==" alt ="image">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                {% if free_book.title %}
+                                    <h2>{{free_book.title}}</h2>
+                                {% endif %}
+                                {% if free_book.Authors %} 
+                                    <p>{{free_book.Authors}}</p>                                                               
+                                {% endif %}
+                                <a href="{% url 'free_book' free_book.id %}">View Book</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="buttons">
+                    {% if recomended_free_books.has_previous %}
+                        <a href="?page={{recomended_free_books.previous_page_number}}">Previous</a>
+                    {% else %}
+                    <!-- <li class="disabled"><span>&laquo;</span></li> -->
+                    {% endif %}
+                    {% if recomended_free_books.has_next %}
+                        <a href="?page={{recomended_free_books.next_page_number}}">Next</a>
+                    {% else %}
+                    <!-- <li class="disabled"><span>&raquo;</span></li> -->
+                    {% endif %} 
+                </div>
+            </div>
+            <!-- Recommendations Ends -->
+        </div>      
+    {% else %}
+        <h1>Not Signed in, Please Sign in first</h1>
+    {% endif %}
+{% endblock %}

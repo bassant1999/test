@@ -1,0 +1,82 @@
+{% extends "book_heaven/layout.html" %}
+
+{% block title %} My library{% endblock %}
+
+{% block body %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+<script>
+
+    function remove_from_lib(book_button) {
+        // flag 0 for free books, 1 for paid books
+        let res = []
+        res.push(book_button.dataset.flag)
+        res.push(book_button.dataset.book)
+        res.push(book_button.dataset.user)
+
+        // alert(res)
+        $.ajax({
+            type: "GET",
+            url: 'remove_library',
+            data: {
+                "result_lib[]": res
+            },
+        });
+        let t = book_button.dataset.index
+        const element = document.getElementById(t);
+        element.remove();
+        
+        return false;
+
+    }
+</script>
+<table>
+    <thead>
+        <th>Cover</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>view</th>
+        <th>&nbsp; &nbsp; Remove from my library</th>
+    </thead>
+    <tbody>
+
+        {% for pbook in pbooks %}
+             
+        <tr id={{pbook.index}}>
+            {% if pbook.cover %}
+            <td><img src={{pbook.cover}} alt="book_image"></td>
+            {% endif %}
+            <td>{{pbook.title}}</td>
+            {% if pbook.author %}
+            <td>{{pbook.author}}</td>
+            {% endif %}
+            <td><a href="{% url 'paid_book' pbook.book.id %}">View</a></td>
+            <td><button data-flag="1" data-book="{{pbook.book.id}}" data-user="{{user.id}}" data-index="{{pbook.index}}"
+                    onclick="remove_from_lib(this)">Remove</button></td>
+        </tr>
+ 
+        {% endfor %}
+         
+        {% for fbook in fbooks %}
+        <tr id="{{fbook.index}}">
+            {% if fbook.cover %}
+            <td><img src={{fbook.cover}} alt="book_image"></td>
+            {% endif %}
+            {% if fbook.title %}
+            <td>{{fbook.title}}</td>
+            {% endif %}
+            {% if fbook.author %}
+            <td>{{fbook.author}}</td>
+            {% endif %}
+            <td><a href="{% url 'free_book' fbook.book.id %}">View</a></td>
+            <td><button data-flag="0" data-book="{{fbook.book.id}}" data-user="{{user.id}}" data-index="{{fbook.index}}"
+                onclick="remove_from_lib(this)">Remove</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+{% endblock %}

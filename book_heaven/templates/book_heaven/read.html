@@ -1,0 +1,11 @@
+{% extends "book_heaven/layout.html" %}
+
+{% block title %} Book Heaven-- {{title}} {% endblock %}
+
+{% block body %}
+    {% for line in story %}
+    <div>
+        {{line}}
+    </div>
+    {% endfor %}
+{% endblock %}

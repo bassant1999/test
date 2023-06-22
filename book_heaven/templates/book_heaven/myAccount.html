@@ -1,0 +1,42 @@
+{% extends "book_heaven/layout.html" %}
+
+{% block title %} My account{% endblock %}
+
+{% block body %}
+    <div>
+        {% if username%}
+        <div>Username -----------   {{username}}</div>
+        {% endif %}
+        {% if email %}
+        <div>Email  -----------    {{email}}</div>
+        {%  endif %}
+        {% if birthday%}
+        <div>Birthday  -----------   {{birthday}}</div>
+        {%  endif %}
+    </div>
+    <br/>
+    <br/>
+
+    <!-- Upload your goodreads library starts -->
+    <div>
+        <form action = "{% url 'upload_library' %}" method = "post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Upload your goodreads library:</label>
+                <br>
+                <input type="file" name="library">
+            </div>
+            <button type="submit">Upload</button>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <!-- Upload your goodreads library Ends -->
+
+    
+
+    
+{% endblock %}
