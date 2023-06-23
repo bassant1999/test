@@ -1,15 +1,18 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-    <head>
+     <head>
         <link rel="icon" href="{% static 'book_heaven/icon.png' %}">
         <!-- <i class="fa fa-book" style="font-size:36px"></i> -->
         <title>
             {% block title %}
             {% endblock %}
         </title>
-        <!-- viewport match the devices's width -->
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <!-- link to stylesheet -->
         <link rel="stylesheet" href="{% static 'book_heaven/styles.css' %}">
         <!-- link to js -->
@@ -22,48 +25,63 @@
     </head>
     <body>
         <!--  navbar starts-->
-        <nav>
-            <ul>
-                <li>
-                    <a href="{% url 'about_us' %}">About us</a>
-                </li>
+        <nav class="navbar navbar-inverse navff">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>                        
+                </button>
+                <a class="navbar-brand"><span class="glyphicon glyphicon-book"></span> Book Heaven</a>
+              </div>
+              <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
                 {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'start' %}">Home</a>
+                        </li>
 
-                    <li>
-                        <a href="{% url 'start' %}">Home</a>
-                    </li>
+                        <li>
+                            <a href="{% url 'my_library' %}">My Library</a>
+                        </li>
 
-                    <li>
-                        <a href="{% url 'my_account' %}">My Account</a>
-                    </li>
+                        <li>
+                            <a href="{% url 'search' %}">Search</a>
+                        </li>
+                            
+                        <li>
+                            <a href="{% url 'about_us' %}">About us</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'login' %}">Log in</a>
+                        </li>
 
-                    <li>
-                        <a href="{% url 'my_library' %}">My Library</a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'search' %}">Search</a>
-                    </li>
-                        
-                    <li>
-                        <a href="{% url 'logout' %}">Log Out</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{% url 'login' %}">Log in</a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'signup_1' %}">Signup</a>
-                    </li>
+                        <li>
+                            <a href="{% url 'signup_1' %}">Signup</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'about_us' %}">About us</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                {% if user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="{% url 'logout' %}">Log Out</a>
+                        </li>
+                        <li><a href="{% url 'my_account' %}"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
+                    </ul>
                 {% endif %}
-            </ul>
-        </nav>
+              </div>
+            </div>
+          </nav>
         <!-- navbar end -->
         {% block body %}
         {% endblock %}
-        
-        <div>
+        <div style="margin: 100px;"></div>
+        <div class="contact_us">
             <h2>Contact us</h2>
            
            <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>

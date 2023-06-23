@@ -3,14 +3,23 @@
 {% block title %} Login{% endblock %}
 
 {% block body %}
-    {% if message %}
-    <div>{{ message }}</div>
-    {% endif %}
-
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+<div class="signup_form_div" style=" position: absolute; top: 35%;"  style="margin:0 auto;">
     <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}   
-        <input type="text", name="email", placeholder="Email">            
-        <input type="password", name="password", placeholder="Password">
-        <input type="submit", value="Login">
+        {% csrf_token %}
+        <div>
+            <div>Email</div> 
+            <input type="text" , name="email" , placeholder="Email" class="signup_form_login" style="font-family: 'Courier New', Courier, monospace;" >
+        </div>
+        <div>
+            <div>Password</div>
+            <input type="password" , name="password" , placeholder="Password"  class="signup_form_login">
+        </div>
+        <div >
+            <input type="submit" , value="Login" id="submit_login" , style="width: 8%">
+        </div>
     </form>
+</div>
 {% endblock %}

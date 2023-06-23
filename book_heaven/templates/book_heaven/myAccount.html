@@ -3,39 +3,53 @@
 {% block title %} My account{% endblock %}
 
 {% block body %}
+<div class="profile">
     <div>
-        {% if username%}
-        <div>Username -----------   {{username}}</div>
-        {% endif %}
-        {% if email %}
-        <div>Email  -----------    {{email}}</div>
-        {%  endif %}
-        {% if birthday%}
-        <div>Birthday  -----------   {{birthday}}</div>
-        {%  endif %}
+        <div class="col-md-1">
+            <i class="material-icons" style="font-size:100px;color:rgb(170, 237, 237)">account_circle</i>
+        </div>
+        <div class="col-md-11">
+            <h1 class="account_title">
+                {% if username%}
+                    {{username}}
+                {% endif %}
+            </h1>
+        </div>
     </div>
-    <br/>
-    <br/>
+    <div class="account">
+        <div class="account_info">
+            {% if email %}
+            <div><strong>Email</strong>  -----------    {{email}}</div>
+            {%  endif %}
+            {% if birthday%}
+            <div><strong>Birthday</strong>  -----------   {{birthday}}</div>
+            {%  endif %}
+        </div>
+        <br/>
+        <br/>
 
-    <!-- Upload your goodreads library starts -->
-    <div>
-        <form action = "{% url 'upload_library' %}" method = "post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label">Upload your goodreads library:</label>
-                <br>
-                <input type="file" name="library">
-            </div>
-            <button type="submit">Upload</button>
-        </form>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+        <!-- Upload your goodreads library starts -->
+        <div class="account_upload">
+            <form action = "{% url 'upload_library' %}" method = "post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3 account_upload_title">
+                    <h3 class="form-label">Upload your goodreads library</h3>
+                    <br>
+                    <input type="file" name="library">
+                </div>
+                <button type="submit">Upload</button>
+            </form>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!-- Upload your goodreads library Ends -->
     </div>
-    <!-- Upload your goodreads library Ends -->
-
+</div>
+    
+    
     
 
     

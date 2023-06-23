@@ -44,7 +44,6 @@ def home(request):
     R_free_books = free_books.objects.all()
     # print("hist", f_user_history(request.user))
     out = recommend_with_user_history(f_user_history(request.user), 10000)
-
     ids = []
     for row in out:
         ids.append(int(row["id"].lstrip("PG")))
@@ -136,11 +135,7 @@ def remove_lib(request):
 def home_paid_books(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
-    R_paid_books = []
-    p_out = get_new_user_book_embeddings(book_df, model1_path, model2_path,p_user_history(request.user), 30)
-
-    for row in p_out:
-        R_paid_books.append(paid_books.objects.get(title=row["title"] ,Authors=row["author"]))
+    R_paid_books = paid_books.objects.all()
     paginator = Paginator(R_paid_books, 10)
     page = request.GET.get('page')
     recomended_paid_books = 0
@@ -179,6 +174,61 @@ def logout_view(request):
     logout(request)
     return render(request, "book_heaven/login.html")
 
+# signup page
+# def signup_view_1(request):
+#     if request.method =="POST":
+#         newUser = {}
+#         newUser['username']= request.POST["username"]
+#         newUser['email'] = request.POST["email"]
+#         newUser['Birthday'] = request.POST["birth"]
+#         newUser['password'] = make_password(request.POST["password"])
+#         nuser= User(username = newUser['username'], email= newUser['email'], Birthday=newUser['Birthday'],password =newUser['password'])
+#         try:
+#             nuser.full_clean()
+#         except ValidationError as e:        
+#             print(e)
+#             return render(request, "book_heaven/signup.html", {
+#                 "message": e
+#             })
+#         else:
+#             # newUser.save()
+#             request.session["user"]=newUser
+#             return HttpResponseRedirect(reverse("signup_helper"))
+
+#     else:
+#        return render(request, "book_heaven/signup.html") 
+    
+# def signup_view_2(request):
+#     pbooks = list(paid_books.objects.all())
+#     result_ = request.GET.getlist('result[]', None)      
+#     u= request.session["user"]
+#     print("****",u)
+#     User.objects.create(username = u['username'], email= u['email'], Birthday=u['Birthday'],password =u['password'])
+#     user_id = User.objects.get(email = u['email'])
+    
+#     print("fffffffffffffff",result_)
+#     for i in range(0,5,2):
+#         print("title",result_[i])        
+#         book_id = paid_books.objects.filter(title = result_[i]).first()
+#         paid_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
+#     for i in range(6,11,2):
+#         print("title",result_[i])    
+#         book_id = free_books.objects.filter(title = result_[i]).first()        
+#         free_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
+#     return  HttpResponseRedirect(reverse("login"))
+   
+
+# def signup_helper(request):
+#     pbooks = list(paid_books.objects.values_list('title', flat=True))
+#     fbooks = list(free_books.objects.all().order_by('-Download_count').values_list('title', flat=True))[0:50000]
+#     # fbook_html = serializers.serialize("json",fbooks)
+#     # pbook_html = serializers.serialize("json",pbooks)
+#     return render(request, "book_heaven/signup_continue.html",{
+#         "pbooks" : pbooks,
+#         "fbooks" : fbooks,
+#         "fbooks_js": json.dumps(fbooks),
+#         "pbooks_js": json.dumps(pbooks)
+#     }) 
 # signup page
 def signup_view_1(request):
     if request.method =="POST":
@@ -234,9 +284,6 @@ def signup_helper(request):
         "fbooks_js": json.dumps(fbooks),
         "pbooks_js": json.dumps(pbooks)
     }) 
-
-
-
 # account page
 def myAccount_view(request):
     if not request.user.is_authenticated:
@@ -319,8 +366,7 @@ def search_view(request):
         return HttpResponseRedirect(reverse("start"))
     # out list is the output of recommendation fn of free books
     # print("Aya",book2book_encoded)
-    aya = { "The Fault in Our Stars":5, "Pride and Prejudice": 4, "Little Women (Little Women, #1)": 3}
-    
+    print("Ayaaa",book_df)
     if request.method =="POST":
         searched = request.POST["searched"]
         fbooks = []
@@ -333,7 +379,6 @@ def search_view(request):
         ptest = psearched[10:20]
         # print("*****************",fsearched)
         out = recommend_with_user_history(f_user_history(request.user), 700)
-        p_out = get_new_user_book_embeddings(book_df, model1_path, model2_path,p_user_history(request.user), 30)
         # print("out     :", out)
         for i in range(0,len(out)):
             if int(out[i]["id"].lstrip("PG")) in fsearched :              
@@ -480,56 +525,81 @@ def free_book_read(request, free_book_id):
             s= soup.img.extract()
         soup.title.string.replace_with(free_book.title)
         nav = soup.new_tag("nav")
-        nav['class'] = "hi"
+        # nav
+        # nav['class'] = "hi"
         ul = soup.new_tag("ul")
+        ul['style'] = "list-style-type: none; margin: 0; padding: 0; overflow: hidden; background-color: #333;"
          # about us
         li0 = soup.new_tag("li")
+        li0['style'] = "float: left;"
         a0 = soup.new_tag("a")
+        a0['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a0['href'] = "../../about_us"
         a0.string = "About us"
         li0.insert(0, a0)
         ul.insert(0, li0)
         # home
         li1 = soup.new_tag("li")
+        li1['style'] = "float: left;"
         a1 = soup.new_tag("a")
+        a1['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a1['href'] = "../../"
         a1.string = "Home"
         li1.insert(0, a1)
         ul.insert(1, li1)
         # account
         li2 = soup.new_tag("li")
+        li2['style'] = "float: left;"
         a2 = soup.new_tag("a")
+        a2['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a2['href'] = "../../myAccount"
         a2.string = "My Account"
         li2.insert(0, a2)
         ul.insert(2, li2)
         # library
         li3 = soup.new_tag("li")
+        li3['style'] = "float: left;"
         a3 = soup.new_tag("a")
+        a3['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a3['href'] = "../../home/my_library"
         a3.string = "My Library"
         li3.insert(0, a3)
         ul.insert(3, li3)
         # Search
         li4 = soup.new_tag("li")
+        li4['style'] = "float: left;"
         a4 = soup.new_tag("a")
+        a4['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a4['href'] = "../../home/search"
         a4.string = "Search"
         li4.insert(0, a4)
         ul.insert(4, li4)
         # log out
         li5 = soup.new_tag("li")
+        li5['style'] = "float: left;"
         a5 = soup.new_tag("a")
+        a5['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
         a5['href'] = "../../logout"
         a5.string = "Log Out"
         li5.insert(0, a5)
         ul.insert(5, li5)
         nav.insert(0, ul)
         soup.html.body.insert(0, nav)
+        soup.html.body['style']= "background-image: url('/static/book_heaven/dark2_.jpg'); color:silver;  background-repeat: no-repeat; background-attachment: fixed; background-size: cover;"
         # lk = soup.new_tag("link")
+        # lk['href'] = "/static/book_heaven/styles.css"
         # lk['rel'] = "stylesheet"
-        # lk['href'] = "../../static/book_heaven/styles.css"
         # soup.html.head.insert(0, lk)
+        # blk = soup.new_tag("link")
+        # blk['href'] = "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        # blk['rel'] = "stylesheet"
+        # soup.html.head.insert(0, blk)
+        # bs1 = soup.new_tag("link")
+        # bs1['src'] = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"
+        # soup.html.head.insert(0, bs1)
+        # bs2 = soup.new_tag("link")
+        # bs2['src'] = "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        # soup.html.head.insert(0, bs1)
         return HttpResponse(soup.prettify())
     elif(frmt == 1):
         r = requests.get(url)

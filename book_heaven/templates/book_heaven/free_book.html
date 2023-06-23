@@ -23,61 +23,59 @@
         /* width: 15px; */
     }
 </style>
-<div>
+<div class="free_book_">
     <!-- information about the free book starts -->
     <div>
-        <div>
+        <div class="free_book_info">
+            {% if free_book.title %}
+                <h2>{{free_book.title}}</h2>
+            {% endif %}
+            <!-- image -->
+            {% if free_book.Image_url %}
+                <div>
+                    <img src="{{free_book.Image_url}}" alt="image">
+                </div>
+            {% endif %}
             <div>
-                {% if free_book.title %}
-                    <h2>{{free_book.title}}</h2>
+                {% if free_book.Authors %}
+                    Auther:{{free_book.Authors}}
                 {% endif %}
-                <!-- image -->
-                {% if free_book.Image_url %}
-                    <div>
-                        <img src="{{free_book.Image_url}}" alt="image">
-                    </div>
-                {% endif %}
-                <div>
-                    {% if free_book.Authors %}
-                        Auther:{{free_book.Authors}}
-                    {% endif %}
-                </div>
-                <div>
-                    {% if free_book.subjects != "set()" %}
-                        Genre:{{free_book.subjects}}
-                    {% endif %}
-                </div>
-                <div>
-                    {% if free_book.Download_count %}
-                        Number of Downloads: {{free_book.Download_count}}
-                    {% endif %}
-                </div>
             </div>
-            <!-- actions starts -->
             <div>
-                <a href="{% url 'free_book_read' free_book.id %}">Start Reading</a>
-                <form action="{% url 'fbook_to_library' free_book.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" name="add to Library" value="Add to Library">
-                </form>
-                <br>
-                
-                <form class="frating" method="post" id="{{free_book.id}}">
-                    {% csrf_token %}
-                    <button type="submit" data-star="1" onclick="freq_rating(this)"
-                        class="fa fa-star  fstar {% if book_rating >= 1 %}fchecked{%endif%}"></button>
-                    <button type="submit" data-star="2" onclick="freq_rating(this)"
-                        class="fa fa-star  fstar {% if book_rating >= 2 %}fchecked{%endif%}"></button>
-                    <button type="submit" data-star="3" onclick="freq_rating(this)"
-                        class="fa fa-star  fstar {% if book_rating >= 3 %}fchecked{%endif%}"></button>
-                    <button type="submit" data-star="4" onclick="freq_rating(this)"
-                        class="fa fa-star  fstar {% if book_rating >= 4 %}fchecked{%endif%}"></button>
-                    <button type="submit" data-star="5" onclick="freq_rating(this)"
-                        class="fa fa-star  fstar {% if book_rating >= 5 %}fchecked{%endif%}"></button>
-                </form>
+                {% if free_book.subjects != "set()" %}
+                    Genre:{{free_book.subjects}}
+                {% endif %}
             </div>
-            <!-- actions ends -->
+            <div>
+                {% if free_book.Download_count %}
+                    Number of Downloads: {{free_book.Download_count}}
+                {% endif %}
+            </div>
         </div>
+        <!-- actions starts -->
+        <div>
+            <a href="{% url 'free_book_read' free_book.id %}">Start Reading</a>
+            <form action="{% url 'fbook_to_library' free_book.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" name="add to Library" value="Add to Library">
+            </form>
+            <br>
+            
+            <form class="frating" method="post" id="{{free_book.id}}">
+                {% csrf_token %}
+                <button type="submit" data-star="1" onclick="freq_rating(this)"
+                    class="fa fa-star  fstar {% if book_rating >= 1 %}fchecked{%endif%}"></button>
+                <button type="submit" data-star="2" onclick="freq_rating(this)"
+                    class="fa fa-star  fstar {% if book_rating >= 2 %}fchecked{%endif%}"></button>
+                <button type="submit" data-star="3" onclick="freq_rating(this)"
+                    class="fa fa-star  fstar {% if book_rating >= 3 %}fchecked{%endif%}"></button>
+                <button type="submit" data-star="4" onclick="freq_rating(this)"
+                    class="fa fa-star  fstar {% if book_rating >= 4 %}fchecked{%endif%}"></button>
+                <button type="submit" data-star="5" onclick="freq_rating(this)"
+                    class="fa fa-star  fstar {% if book_rating >= 5 %}fchecked{%endif%}"></button>
+            </form>
+        </div>
+        <!-- actions ends -->
     </div>
     <!-- information about the free book ends -->
 

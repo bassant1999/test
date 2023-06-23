@@ -1,18 +1,10 @@
 import pandas as pd
 import numpy as np
-from .models import *
+
 # variables
 free_books_df = pd.read_csv('new_df_free_onwebsite.csv')
 similarity_matrix_df = pd.read_csv('simmat3.csv')
 similarity_mat = similarity_matrix_df.to_numpy()
-
-#user history from free books
-def f_user_history(user):
-    f_books = free_books_rating.objects.filter(User_id = user)
-    user_hist = {}
-    for f_book in f_books:
-        user_hist[f_book.Book_id.title] = f_book.rating
-    return user_hist
 
 
 # recommendation function for free books
@@ -40,7 +32,7 @@ def recommend_with_user_history (user_history, no_recommendations):
         for j in similar_books:
             if j[0] not in user_history:
                 if j[0] in total_similar_books and (j[1]*user_history[i]< total_similar_books[j[0]]):
-                    continue
+                    continue;
                 else:
                     total_similar_books[j[0]] = j[1]*user_history[i]
         

@@ -1,26 +1,146 @@
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-import matplotlib.pyplot as plt
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Input
-from tensorflow.keras.layers import Embedding,dot,Dot
-from tensorflow.keras.utils import to_categorical
-import matplotlib.pyplot as plt
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn import preprocessing
-from tensorflow.keras.layers import Dropout, Flatten
-from tensorflow.keras.optimizers import Adam
-from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import seaborn as sns
 from .models import *
 
-
+p_out = [{'title': 'Beauty and the Beast',
+  'author': 'Walt Disney Company, Ellen Titlebaum'},
+ {'title': "Scott Pilgrim, Volume 6: Scott Pilgrim's Finest Hour",
+  'author': "Bryan Lee O'Malley"},
+ {'title': 'The Awakening', 'author': 'Kate Chopin'},
+ {'title': 'Think Twice (Rosato & Associates, #11)',
+  'author': 'Lisa Scottoline'},
+ {'title': 'Wolf-Speaker (Immortals, #2)', 'author': 'Tamora Pierce'},
+ {'title': 'Harvesting the Heart', 'author': 'Jodi Picoult'},
+ {'title': 'Monument 14 (Monument 14, #1)', 'author': 'Emmy Laybourne'},
+ {'title': "Dark Witch (The Cousins O'Dwyer Trilogy, #1)",
+  'author': 'Nora Roberts'},
+ {'title': 'Deadline (Virgil Flowers, #8)', 'author': 'John Sandford'},
+ {'title': 'Shadow and Bone (Shadow and Bone, #1)', 'author': 'Leigh Bardugo'},
+ {'title': 'Veganomicon: The Ultimate Vegan Cookbook',
+  'author': 'Isa Chandra Moskowitz, Terry Hope Romero'},
+ {'title': 'Unseen Academicals (Discworld, #37; Rincewind #8)',
+  'author': 'Terry Pratchett'},
+ {'title': 'Drowned Wednesday (The Keys to the Kingdom, #3)',
+  'author': 'Garth Nix'},
+ {'title': 'Death Without Company (Walt Longmire, #2)',
+  'author': 'Craig Johnson'},
+ {'title': 'Evil Under the Sun (Hercule Poirot, #23)',
+  'author': 'Agatha Christie'},
+ {'title': 'Lies (Gone, #3)', 'author': 'Michael  Grant'},
+ {'title': 'Forest of Secrets (Warriors, #3)', 'author': 'Erin Hunter'},
+ {'title': 'Beatrice and Virgil', 'author': 'Yann Martel'},
+ {'title': 'The Wind in the Willows',
+  'author': 'Kenneth Grahame, Gillian Avery'},
+ {'title': 'Last Chance Saloon', 'author': 'Marian Keyes'},
+ {'title': 'To Have and Have Not', 'author': 'Ernest Hemingway'},
+ {'title': 'Jailbird', 'author': 'Kurt Vonnegut Jr.'},
+ {'title': 'On the Street Where You Live', 'author': 'Mary Higgins Clark'},
+ {'title': 'Sometimes It Lasts (Sea Breeze, #5)', 'author': 'Abbi Glines'},
+ {'title': 'The Count of Monte Cristo',
+  'author': 'Alexandre Dumas, Robin Buss'},
+ {'title': 'The English Patient', 'author': 'Michael Ondaatje'},
+ {'title': 'Light a Penny Candle', 'author': 'Maeve Binchy'},
+ {'title': 'The Burning Wire (Lincoln Rhyme, #9)', 'author': 'Jeffery Deaver'},
+ {'title': 'Venom (Elemental Assassin, #3)', 'author': 'Jennifer Estep'},
+ {'title': 'Seventh Grave and No Body (Charley Davidson, #7)',
+  'author': 'Darynda Jones'},
+ {'title': 'Messenger (The Giver, #3)', 'author': 'Lois Lowry'},
+ {'title': 'The City of Falling Angels', 'author': 'John Berendt'},
+ {'title': 'Napalm & Silly Putty', 'author': 'George Carlin'},
+ {'title': "The Cuckoo's Calling (Cormoran Strike, #1)",
+  'author': 'Robert Galbraith, J.K. Rowling'},
+ {'title': 'Slapstick, or Lonesome No More!', 'author': 'Kurt Vonnegut Jr.'},
+ {'title': 'Oblivion', 'author': 'David Foster Wallace'},
+ {'title': 'Someone', 'author': 'Alice McDermott'},
+ {'title': 'Undead and Unemployed (Undead, #2)',
+  'author': 'MaryJanice Davidson'},
+ {'title': 'A Thousand Acres', 'author': 'Jane Smiley'},
+ {'title': 'Touch of Power (Healer, #1)', 'author': 'Maria V. Snyder'},
+ {'title': 'Takedown (Scot Harvath, #5)', 'author': 'Brad Thor'},
+ {'title': 'The Darkest Whisper (Lords of the Underworld #4)',
+  'author': 'Gena Showalter'},
+ {'title': 'The Bluest Eye', 'author': 'Toni Morrison'},
+ {'title': 'The Unwanteds (Unwanteds, #1)', 'author': 'Lisa McMann'},
+ {'title': 'Patriot Games (Jack Ryan Universe, #2)', 'author': 'Tom Clancy'},
+ {'title': 'Click, Clack, Moo: Cows That Type',
+  'author': 'Doreen Cronin, Betsy Lewin'},
+ {'title': 'Dali: The Paintings', 'author': 'Robert Descharnes, Gilles Néret'},
+ {'title': 'Radiant Angel (John Corey, #7)', 'author': 'Nelson DeMille'},
+ {'title': 'The History of the Hobbit, Part One: Mr. Baggins',
+  'author': 'John D. Rateliff, J.R.R. Tolkien'},
+ {'title': 'For One More Day', 'author': 'Mitch Albom'},
+ {'title': '1Q84 BOOK 2 (1Q84, #2)', 'author': 'Haruki Murakami'},
+ {'title': 'Run Baby Run', 'author': 'Nicky Cruz, Jamie Buckingham'},
+ {'title': 'The Beast (Black Dagger Brotherhood, #14)', 'author': 'J.R. Ward'},
+ {'title': 'Deep Kiss of Winter (Includes: Immortals After Dark, #8; Alien Huntress, #3.5)',
+  'author': 'Kresley Cole, Gena Showalter'},
+ {'title': 'Vampire Knight, Vol. 9', 'author': 'Matsuri Hino, Tomo Kimura'},
+ {'title': 'Because of Mr. Terupt', 'author': 'Rob Buyea'},
+ {'title': 'The Brightest Star in the Sky', 'author': 'Marian Keyes'},
+ {'title': 'Promised (One Night, #1)', 'author': 'Jodi Ellen Malpas'},
+ {'title': 'Forever Princess (The Princess Diaries, #10)',
+  'author': 'Meg Cabot'},
+ {'title': 'A Killing Frost (Tomorrow, #3)', 'author': 'John Marsden'},
+ {'title': 'Leviathan', 'author': 'Paul Auster'},
+ {'title': 'South of Broad', 'author': 'Pat Conroy'},
+ {'title': 'Masquerade (Blue Bloods, #2)', 'author': 'Melissa de la Cruz'},
+ {'title': 'A Course in Miracles', 'author': 'Foundation for Inner Peace'},
+ {'title': 'Tiny Beautiful Things: Advice on Love and Life from Dear Sugar',
+  'author': 'Cheryl Strayed'},
+ {'title': 'Blue Smoke', 'author': 'Nora Roberts'},
+ {'title': 'Big Nate on a Roll (Big Nate Novels, #3)',
+  'author': 'Lincoln Peirce'},
+ {'title': 'Little Town on the Prairie  (Little House, #7)',
+  'author': 'Laura Ingalls Wilder, Garth Williams'},
+ {'title': 'The Man in the Brown Suit', 'author': 'Agatha Christie'},
+ {'title': 'The World of Winnie-the-Pooh (Winnie-the-Pooh, #1-2)',
+  'author': 'A.A. Milne, Ernest H. Shepard'},
+ {'title': 'Financial Peace Revisited', 'author': 'Dave Ramsey'},
+ {'title': 'Rules of Attraction (Perfect Chemistry, #2)',
+  'author': 'Simone Elkeles'},
+ {'title': 'Baudolino', 'author': 'Umberto Eco, William Weaver, R.C.S. Libri'},
+ {'title': 'Jesus the Christ', 'author': 'James E. Talmage'},
+ {'title': 'The Last Star (The 5th Wave, #3)', 'author': 'Rick Yancey'},
+ {'title': 'Winter Prey (Lucas Davenport, #5)', 'author': 'John Sandford'},
+ {'title': 'Rainbow Six (Jack Ryan Universe, #10)', 'author': 'Tom Clancy'},
+ {'title': 'Rock Chick Renegade (Rock Chick, #4)', 'author': 'Kristen Ashley'},
+ {'title': 'The Strange and Beautiful Sorrows of Ava Lavender',
+  'author': 'Leslye Walton'},
+ {'title': 'The Decameron', 'author': 'Giovanni Boccaccio, G.H. McWilliam'},
+ {'title': 'Without Remorse (Jack Ryan Universe, #1)', 'author': 'Tom Clancy'},
+ {'title': 'Comfort Me with Apples: More Adventures at the Table',
+  'author': 'Ruth Reichl'},
+ {'title': 'Dreamfever (Fever, #4)', 'author': 'Karen Marie Moning'},
+ {'title': 'The Carnivorous Carnival (A Series of Unfortunate Events, #9)',
+  'author': 'Lemony Snicket, Brett Helquist'},
+ {'title': 'Y: The Last Man, Vol. 1: Unmanned',
+  'author': 'Brian K. Vaughan, Pia Guerra, José Marzán Jr.'},
+ {'title': 'Hour Game (Sean King & Michelle Maxwell, #2)',
+  'author': 'David Baldacci'},
+ {'title': "Escape from Mr. Lemoncello's Library (Mr. Lemoncello's Library #1)",
+  'author': 'Chris Grabenstein'},
+ {'title': 'Who Could That Be at This Hour? (All the Wrong Questions, #1)',
+  'author': 'Lemony Snicket, Seth'},
+ {'title': 'Unfinished Tales of Númenor and Middle-Earth',
+  'author': 'J.R.R. Tolkien, Christopher Tolkien'},
+ {'title': 'Never Have I Ever (The Lying Game, #2)', 'author': 'Sara Shepard'},
+ {'title': 'Saga, Vol. 2 (Saga, #2)',
+  'author': 'Brian K. Vaughan, Fiona Staples'},
+ {'title': 'The 5 Greatest Warriors (Jack West Jr, #3)',
+  'author': 'Matthew Reilly'},
+ {'title': 'Nation', 'author': 'Terry Pratchett'},
+ {'title': 'City of the Beasts (Eagle and Jaguar, #1)',
+  'author': 'Isabel Allende, Margaret Sayers Peden'},
+ {'title': 'The Tale of Despereaux',
+  'author': 'Kate DiCamillo, Timothy Basil Ering'},
+ {'title': 'Crush', 'author': 'Richard Siken'},
+ {'title': 'The Diary of Frida Kahlo: An Intimate Self-Portrait',
+  'author': 'Frida Kahlo, Carlos Fuentes, Sarah M. Lowe'},
+ {'title': 'The Mystery of the Blue Train (Hercule Poirot, #6)',
+  'author': 'Agatha Christie'},
+ {'title': 'Outbreak (Dr. Marissa Blumenthal, #1)', 'author': 'Robin Cook'},
+ {'title': 'Kimi ni Todoke: From Me to You, Vol. 1',
+  'author': 'Karuho Shiina, Tomo Kimura'}]
 
 ids_list = list(paid_books.objects.filter().values_list('id', flat=True))
 title_list = list(paid_books.objects.filter().values_list('title', flat=True))
@@ -29,14 +149,6 @@ author_list = list(paid_books.objects.filter().values_list('Authors', flat=True)
 book_df = pd.DataFrame(list(zip(ids_list, title_list, author_list)),
                columns =['book_id', 'title', 'authors'])
 
-
-#user history from paid books
-def p_user_history(user):
-    p_books = paid_books_rating.objects.filter(User_id = user)
-    user_hist = {}
-    for p_book in p_books:
-        user_hist[p_book.Book_id.title] = p_book.rating
-    return user_hist
 
 def csv2dic(csv_path):
     df = pd.read_csv(csv_path,header= None)
@@ -53,71 +165,3 @@ book2book_encoded = csv2dic("df_book2book_encoded.csv")
 bookencoded2book = csv2dic("df_bookencoded2book.csv")
 user2user_encoded = csv2dic("df_user2user_encoded.csv")
 userencoded2user = csv2dic("df_userencoded2user.csv")
-model1_path = "model_net_plain_2"
-model2_path = "model_2_for_website"
-
-def my_load_model(model_1_path):
-    return keras.models.load_model(model_1_path)
-
-#recommend function for paid books
-def get_new_user_book_embeddings(book_df, model1_path, model2_path, user_books,  no_recommendations, embedding_layer_size= 150):
-    books_list = list(user_books.keys())
-    # print(books_list)
-    books_ids_list = book_df[book_df["title"].isin(books_list)]["book_id"].values.tolist()
-    # print(books_ids_list)
-
-    model_2  = my_load_model(model2_path)
-    model_1  = my_load_model(model1_path)
-#     books_not_read_encoded = [[book2book_encoded.get(x)] for x in books_not_read]
-    books_ids_list_encoded = [[book2book_encoded.get(x)] for x in books_ids_list]
-    # print(books_ids_list_encoded)
-
-    books_ids_list_encoded = np.asarray(books_ids_list_encoded).astype('float32')
-    # print(books_ids_list_encoded)
-    user_books_embeddings = model_2.predict(books_ids_list_encoded)
-    user_books_embeddings = user_books_embeddings.reshape(len(user_books), embedding_layer_size)
-    user_book_ratings = np.zeros(len(user_books))
-    usr_books_keys =  list(user_books.keys())
-    i = 0
-    for index in range(len(user_books)):
-        user_book_ratings[index] = user_books[usr_books_keys[i]]
-        i += 1
-    user_embedding, residuals, rank, s = np.linalg.lstsq(user_books_embeddings,user_book_ratings, rcond=-1) # Get embedding for new user
-    user_embedding = user_embedding.reshape(1, embedding_layer_size) # User embedding based on choices of user
-    user_embedding = np.squeeze(user_embedding)
-    books_embeddings = model_1.get_layer('embedding_15').get_weights()
-    books_embeddings = np.array(books_embeddings)
-    books_embeddings = np.squeeze(books_embeddings)
-    # print(np.shape(books_embeddings))
-    # print(f"user embedding shape: {user_embedding.shape}")
-    predicted_ratings = np.matmul(books_embeddings, user_embedding)
-    predicted_dict = {}
-    predicted_dict_2 = {}
-    predicted_dict_temp = {}
-
-    i = 0
-    for rating in predicted_ratings:
-#         if i not in books_ids_list: 
-        predicted_dict[i] = rating
-        i+=1
-    temp_keys = [bookencoded2book.get(x) for x in predicted_dict.keys()]
-    print(type(temp_keys))
-    i = 0
-    for key in predicted_dict:
-        predicted_dict_temp[temp_keys[i]] = predicted_dict[key]
-        i+=1
-    for key in predicted_dict_temp:
-        if key not in books_ids_list: 
-            predicted_dict_2[key] = predicted_dict_temp[key]
-    sorted_predicted_dict = sorted(predicted_dict_2.items(), key=lambda x:x[1], reverse = True)[:no_recommendations]
-    # print(sorted_predicted_dict)
-    # print(np.array(sorted_predicted_dict).shape)
-    sorted_predicted_dict = dict(list(sorted_predicted_dict))
-    # print(sorted_predicted_dict.keys())
-    temp = book_df[book_df["book_id"].isin (sorted_predicted_dict.keys())]
-    # print(temp.shape)
-    recommendations = []
-    for i in temp.itertuples():
-        recommendations.append({"title":i.title, "author":i.authors})
-    # print(recommendations)
-    return recommendations

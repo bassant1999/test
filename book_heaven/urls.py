@@ -18,6 +18,7 @@ urlpatterns = [
    path("signup", views.signup_view_1, name="signup_1"),
    path("signup_continue", views.signup_view_2, name="signup_2"),
    path("signup_helper", views.signup_helper, name="signup_helper"),
+  
    # account page
    path("myAccount",views.myAccount_view,name="my_account"),
    path("myAccount/upload",views.upload_library,name="upload_library"),

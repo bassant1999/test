@@ -4,51 +4,49 @@
 
 {% block body %}
     {% if user.is_authenticated %}  
+        <!-- Recommendations starts -->
         <div>
-            <!-- Recommendations starts -->
-            <div>
-                <h1>Recommendations</h1>
-                <h2>Books</h2>
-                <div>
-                    <a class="btn btn-secondary" href="{% url 'home' %}" role="button">Free Books</a>
-                    <a class="btn btn-primary" href="{% url 'home_paid_books' %}" role="button">Paid Books</a>    
-                </div>
-               <!-- recommended books -->
-                <div>
-                    {% for paid_book in recomended_paid_books %}
-                        <div class="row">
-                            {% if paid_book.Image_url %}  
-                                <div class="col-md-4">
-                                    <img src="{{paid_book.Image_url}}" alt ="image">
-                                </div>                 
-                            {% endif %}
-                            <div class="col-md-8">
-                                {% if paid_book.title %}
-                                    <h2>{{paid_book.title}}</h2>
-                                {% endif %}
-                                {% if paid_book.Authors %}  
-                                    <p>{{paid_book.Authors}}</p>      
-                                {% endif %}
-                                <a href="{% url 'paid_book' paid_book.id %}">View Book</a>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="buttons">
-                    {% if recomended_paid_books.has_previous %}
-                        <a href="?page={{recomended_paid_books.previous_page_number}}">Previous</a>
-                    {% else %}
-                    <!-- <li class="disabled"><span>&laquo;</span></li> -->
-                    {% endif %}
-                    {% if recomended_paid_books.has_next %}
-                        <a href="?page={{recomended_paid_books.next_page_number}}">Next</a>
-                    {% else %}
-                    <!-- <li class="disabled"><span>&raquo;</span></li> -->
-                    {% endif %} 
-                </div>
+            <h1 class="rec_books">Recommended Books</h1>
+            <hr class="title_h">
+            <div class="buttons_h">
+                <a class="btn btn-secondary" href="{% url 'home' %}" role="button">Free Books</a>
+                <a class="btn btn-primary" href="{% url 'home_paid_books' %}" role="button">Paid Books</a>    
             </div>
-            <!-- Recommendations Ends -->
-        </div>      
+            <!-- recommended books -->
+            <div>
+                {% for paid_book in recomended_paid_books %}
+                    <div class="row book_h">
+                        {% if paid_book.Image_url %}  
+                            <div class="col-md-4 book_image_h">
+                                <img src="{{paid_book.Image_url}}" alt ="image">
+                            </div>                 
+                        {% endif %}
+                        <div class="col-md-8 book_info_h">
+                            {% if paid_book.title %}
+                                <h3>{{paid_book.title}}</h3>
+                            {% endif %}
+                            {% if paid_book.Authors %}  
+                                <h4>{{paid_book.Authors}}</h4>      
+                            {% endif %}
+                            <a href="{% url 'paid_book' paid_book.id %}">View Book</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="buttons">
+                {% if recomended_paid_books.has_previous %}
+                    <a href="?page={{recomended_paid_books.previous_page_number}}">Previous</a>
+                {% else %}
+                <!-- <li class="disabled"><span>&laquo;</span></li> -->
+                {% endif %}
+                {% if recomended_paid_books.has_next %}
+                    <a href="?page={{recomended_paid_books.next_page_number}}">Next</a>
+                {% else %}
+                <!-- <li class="disabled"><span>&raquo;</span></li> -->
+                {% endif %} 
+            </div>
+        </div>
+        <!-- Recommendations Ends -->    
     {% else %}
         <h1>Not Signed in, Please Sign in first</h1>
     {% endif %}

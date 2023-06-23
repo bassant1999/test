@@ -7,8 +7,12 @@
         <title>
             Start
         </title>
-        <!-- viewport match the devices's width -->
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <!-- viewport match the devices's width -->
         <!-- link to stylesheet -->
         <link rel="stylesheet" href="{% static 'book_heaven/styles.css' %}">
         <!-- link to js -->
@@ -20,11 +24,51 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </head>
     <body id="start_body">
-        <a href="{% url 'signup_1' %}">Signup</a>
+        <!-- <a href="{% url 'signup_1' %}">Signup</a>
         <br/>
         <a href="{% url 'login' %}">Log in</a>
         <br/>
-        <a href="{% url 'about_us' %}">About us</a>
-              
+        <a href="{% url 'about_us' %}">About us</a> -->
+        <!--  navbar starts-->
+        <nav class="navbar navbar-inverse navff">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                    </button>
+                    <a class="navbar-brand"><span class="glyphicon glyphicon-book"></span> Book Heaven</a>
+              </div>
+              <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{% url 'login' %}">Log in</a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'signup_1' %}">Signup</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'about_us' %}">About us</a>
+                        </li>
+                    </ul>
+              </div>
+            </div>
+        </nav>
+        <!-- navbar end -->
+        <div id = "start_div" style=" position: absolute; top: 6%;left: 30%;"  style="margin:0 auto; ">
+            <p id = "start_id" >Book Heaven</p>
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="contact_us">
+            <h2>Contact us</h2>
+           
+           <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+           <a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+           <a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+           
+           </div>
     </body>
+
 </html>
