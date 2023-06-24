@@ -27,7 +27,12 @@ body {
     bottom:0;
     
 }
-
+.contact_us_abs{
+    color: rgb(201,168,120);
+    position:absolute;
+    bottom:0;
+    
+}
 
 .signup_form_div div input, .signup_book_inner, .signup_form_div div div{
     /* margin: 90px; */
@@ -86,6 +91,7 @@ body {
     font-size: 35px;
     padding-left: 15px;
     padding-top: 15px;
+    text-align: center;
 }
 .title_h{
     border-top: 1px solid rgb(60, 59, 59);
@@ -122,26 +128,24 @@ body {
 .book_info_h a{
     font-size: 15px;
 }
-/* paid book [page ] */
-.a_review_fbook
-{
-    border: 2px outset rgb(197, 194, 194);
-    border-radius: 10px;
-    padding: 10px;
-    margin: 10px;
-    width:90%;
+.buttons_home{
+    font-size: 20px;
+    /* border: 1px solid red; */
+    width:40%;
+    margin: 20px auto;
 }
+.buttons_home a{
+    padding-left: 50px;
+    color:silver;
+}
+
 
 #start_id{
     font-size: 100px;
-    font-family: cursive;
+    font-family: "Sofia", sans-serif;
     color: rgb(201,168,120);
 }
 
-.time
-{
-    color: gray;
-}
 /* end of paid book css */
 
 /* trial */
@@ -151,6 +155,14 @@ body {
 }
 .navff{
     background-color:rgb(10, 10, 39)
+}
+/*start page*/
+.navfs{
+    background-color:rgb(24, 24, 35);
+    opacity: 0.75;
+}
+.start_tran{
+    opacity: 0.75;
 }
 /* my library */
 .table_head{
@@ -185,24 +197,40 @@ body {
 /* my account page */
 .account_title{
     color:rgb(181, 146, 94);
-    padding:30px;
+    /* padding:100px; */
+    font-size: 35px;
+    position: absolute; 
+    top: 23%; 
+    left:53%;
 }
 .account{
-    padding: 20px;
+    font-size: 25px;
+    position: absolute; 
+    top: 45%; 
+    /* left:2%; */
 }
-.account_info
-{
-    color: silver;
-    font-size: 20px;
+.account_info{
+    position: absolute; 
+    top: 38%; 
+    left:40%;
+    color:rgb(147, 119, 76);
+
+    font-size: 25px;
+}
+.account_icon{
+    position: absolute; 
+    top: 20%; 
+    left:39%;
 }
 .account_upload_title{
     padding-bottom: 15px;
 }
 .account_upload_title h3{
     color:rgb(181, 146, 94);
+    font-size: 25px;
 }
 .account_upload_title input{
-    color:silver;
+    color:rgb(147, 119, 76);
     font-size: 15px;
     margin-left: 10px;
 }
@@ -216,14 +244,129 @@ body {
     margin-left: 10px;
 }
 
-/* free book page */
-.free_book_{
+/* book page */
+.book_{
     padding-left: 10px;
 }
-.free_book_info{
-    color: rgb(201,168,120);
+.book_info{
+    color: silver;
+    font-size: 20px;
 }
-.free_book_info h2{
+.book_info h2{
     color: rgb(150, 122, 82);
     font-weight: bold;
+    /* text-align: center; */
+    font-size: 35px;
 }
+.book_info div{
+    margin: 10px;
+}
+.book_info div strong{
+    color: rgb(150, 122, 82);
+}
+/* .book_info_image{
+    text-align: center;
+} */
+.book_info_image img{
+    padding:10px;
+}
+.to_library{
+    padding: 10px;
+}
+.to_library input {
+    padding: 5px;
+}
+.review{
+    /* border: 1px solid red; */
+    padding-top: 10px;
+}
+.a_review_fbook, .a_review_pbook
+{
+    border: 2px outset rgb(197, 194, 194);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    width:90%;
+    font-size:18px;
+}
+.a_review_fbook div, .a_review_pbook div {
+    color:silver;
+}
+.a_review_fbook div span, .a_review_pbook div span{
+    color:rgb(181, 146, 94);
+    font-size: 21px;
+}
+.time
+{
+    color: rgb(65, 65, 65);
+    text-align: right;
+    margin-top: 5px;
+}
+.start_read{
+    font-size: 20px;
+}
+/* about us */
+.overview, .mission{
+    padding-top: 50px;
+    padding-left: 10px;
+    /* padding-bottom: 20px; */
+}
+.overview h2, .mission h2{
+    color:rgb(181, 146, 94);
+}
+.overview p, .mission ol{
+    color:silver;
+    font-size: 16px;
+    font-style: italic;
+}
+.overview p{
+    padding-left:15px;
+}
+
+/* search_page */
+#con_us{
+    position: absolute; 
+    color: rgb(201,168,120);    
+    top: 5%; 
+    left:89%;
+}
+.search_txt{
+    color:rgb(147, 119, 76);
+
+    font-size: 20px;
+}
+.search_results{
+    padding: 20px;
+}
+.search_msg{
+    color:rgb(152, 50, 3);
+    font-family: cursive;
+    font-size: 27px;
+}
+.search_msg_s{
+    color:rgb(137, 137, 130);
+    font-family: cursive;
+    font-size: 20px;
+}
+.search_form{
+    width:300px;
+    height: 30px;
+    margin-right: 10px;
+   
+    
+}
+.search_btn{
+    width:100px;
+    height: 30px;
+    color: rgb(147, 119, 76);
+}
+
+@media screen and (max-width: 400px) {
+    /* home page */
+    .buttons_home{
+        font-size: 20px;
+        /* border: 1px solid red; */
+        /* width:80%;
+        margin: 20px auto; */
+    }
+  }

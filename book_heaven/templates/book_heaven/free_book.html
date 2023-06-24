@@ -20,42 +20,42 @@
         /* margin: 0px 5px; */
         background-color: inherit !important;
         border: 0 !important;
-        /* width: 15px; */
+        /* width: 25px; */
     }
 </style>
-<div class="free_book_">
+<div class="book_">
     <!-- information about the free book starts -->
     <div>
-        <div class="free_book_info">
+        <div class="book_info">
             {% if free_book.title %}
                 <h2>{{free_book.title}}</h2>
             {% endif %}
             <!-- image -->
             {% if free_book.Image_url %}
-                <div>
+                <div class="book_info_image">
                     <img src="{{free_book.Image_url}}" alt="image">
                 </div>
             {% endif %}
             <div>
                 {% if free_book.Authors %}
-                    Auther:{{free_book.Authors}}
+                    <strong>Auther: </strong>{{free_book.Authors}}
                 {% endif %}
             </div>
             <div>
                 {% if free_book.subjects != "set()" %}
-                    Genre:{{free_book.subjects}}
+                    <strong>Genre: </strong>{{free_book.subjects}}
                 {% endif %}
             </div>
             <div>
                 {% if free_book.Download_count %}
-                    Number of Downloads: {{free_book.Download_count}}
+                    <strong>Number of Downloads: </strong> {{free_book.Download_count}}
                 {% endif %}
             </div>
         </div>
         <!-- actions starts -->
         <div>
-            <a href="{% url 'free_book_read' free_book.id %}">Start Reading</a>
-            <form action="{% url 'fbook_to_library' free_book.id %}" method="post">
+            <a href="{% url 'free_book_read' free_book.id %}" class="start_read">Start Reading >></a>
+            <form action="{% url 'fbook_to_library' free_book.id %}" method="post" class="to_library">
                 {% csrf_token %}
                 <input type="submit" name="add to Library" value="Add to Library">
             </form>
@@ -64,15 +64,15 @@
             <form class="frating" method="post" id="{{free_book.id}}">
                 {% csrf_token %}
                 <button type="submit" data-star="1" onclick="freq_rating(this)"
-                    class="fa fa-star  fstar {% if book_rating >= 1 %}fchecked{%endif%}"></button>
+                    class="fa fa-star fa-2x fstar {% if book_rating >= 1 %}fchecked{%endif%}"></button>
                 <button type="submit" data-star="2" onclick="freq_rating(this)"
-                    class="fa fa-star  fstar {% if book_rating >= 2 %}fchecked{%endif%}"></button>
+                    class="fa fa-star fa-2x fstar {% if book_rating >= 2 %}fchecked{%endif%}"></button>
                 <button type="submit" data-star="3" onclick="freq_rating(this)"
-                    class="fa fa-star  fstar {% if book_rating >= 3 %}fchecked{%endif%}"></button>
+                    class="fa fa-star fa-2x fstar {% if book_rating >= 3 %}fchecked{%endif%}"></button>
                 <button type="submit" data-star="4" onclick="freq_rating(this)"
-                    class="fa fa-star  fstar {% if book_rating >= 4 %}fchecked{%endif%}"></button>
+                    class="fa fa-star fa-2x fstar {% if book_rating >= 4 %}fchecked{%endif%}"></button>
                 <button type="submit" data-star="5" onclick="freq_rating(this)"
-                    class="fa fa-star  fstar {% if book_rating >= 5 %}fchecked{%endif%}"></button>
+                    class="fa fa-star fa-2x fstar {% if book_rating >= 5 %}fchecked{%endif%}"></button>
             </form>
         </div>
         <!-- actions ends -->
@@ -80,7 +80,7 @@
     <!-- information about the free book ends -->
 
     <!-- reviews starts -->
-    <div>
+    <div class="review">
         <!-- Write A review starts -->
         <div>
             <form data-id="{{free_book.id}}" onsubmit="return review_fbook(this)">
@@ -94,7 +94,7 @@
             {% for r in reviews reversed %}
                 <div class = "a_review_fbook">
                     <div>
-                        <i class="material-icons" style="font-size:30px;color:rgb(65, 68, 68); margin-right: 5px">account_circle</i>
+                        <i class="material-icons" style="font-size:30px;color:rgb(149, 156, 156); margin-right: 5px">account_circle</i>
                         <span style="padding-bottom:5px;">{{r.User_id.username}}</span>
                         <hr>
                     </div>
@@ -110,6 +110,13 @@
         <!-- show the reviews Ends -->
     </div>
     <!-- reviews ends -->
+</div>
+<div style="margin: 100px;"></div>
+<div class="contact_us">
+<h2>Contact us</h2>
+<a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+<a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+<a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
 
 </div>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
@@ -136,7 +143,7 @@
                     list = document.querySelector('#view_reviews_fbook');
                     const perantDivNode = document.createElement("div");
                     const user_Div = document.createElement("div");
-                    user_Div.innerHTML = '<i class="material-icons" style="font-size:30px;color:rgb(65, 68, 68); margin-right: 5px">account_circle</i>';
+                    user_Div.innerHTML = '<i class="material-icons" style="font-size:30px;color:rgb(149, 156, 156); margin-right: 5px">account_circle</i>';
                     const spanNode = document.createElement("span");
                     spanNode.innerHTML = result['user'];
                     user_Div.appendChild(spanNode);
@@ -177,6 +184,10 @@
 
     }
 
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+        }
+
     function freq_rating(button_star) {
 
         const form = document.querySelector('.frating');
@@ -189,13 +200,14 @@
             // remove();
             event.preventDefault();
             res = [form.id, rating];
-            $.ajax({
+            delay(3000).then(() => $.ajax({
                 type: "GET",
                 url: 'frating_stars',
                 data: {
                     "result[]": res
                 },
-            });
+            }));
+            
         });
 
 

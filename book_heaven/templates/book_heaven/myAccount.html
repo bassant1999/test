@@ -4,27 +4,31 @@
 
 {% block body %}
 <div class="profile">
-    <div>
-        <div class="col-md-1">
-            <i class="material-icons" style="font-size:100px;color:rgb(170, 237, 237)">account_circle</i>
+    <div >
+        <div>
+            <div class=" account_icon">
+                <i class="material-icons" style="font-size:120px;color:rgb(208, 218, 218); ">account_circle</i>
+            </div>
+            <div >
+                <h1 class="account_title">
+                    {% if username%}
+                        {{username}}
+                    {% endif %}
+                </h1>
+            </div>
         </div>
-        <div class="col-md-11">
-            <h1 class="account_title">
-                {% if username%}
-                    {{username}}
-                {% endif %}
-            </h1>
+        <div class="account_info">
+            
+            {% if email %}        
+            <div> <p >Email  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{email}}  </p>  </div>
+            {%  endif %}
+            {% if birthday%}
+            <div><p >Birthday  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   {{birthday}}  </p></div>
+            {%  endif %}
         </div>
     </div>
     <div class="account">
-        <div class="account_info">
-            {% if email %}
-            <div><strong>Email</strong>  -----------    {{email}}</div>
-            {%  endif %}
-            {% if birthday%}
-            <div><strong>Birthday</strong>  -----------   {{birthday}}</div>
-            {%  endif %}
-        </div>
+        
         <br/>
         <br/>
 
@@ -41,15 +45,22 @@
             </form>
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} table_body" role="alert">{{ message }}</div>
                 {% endfor %}
             {% endif %}
         </div>
         <!-- Upload your goodreads library Ends -->
     </div>
 </div>
+<!-- <div style="margin: 150px;"></div>     -->
+<div class="contact_us_abs">
+    <h2>Contact us</h2>
     
+    <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
     
+</div>    
     
 
     

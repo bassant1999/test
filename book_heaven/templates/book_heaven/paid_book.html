@@ -26,59 +26,57 @@
 
 
 
-<div>
+<div class="book_">
     <!-- information about the paid book and actions starts -->
     <div>
-        <!-- Title -->
-        <div>
-            {% if paid_book.title %}
-                <h2>{{paid_book.title}}</h2>
-            {% endif %}
-        </div>
-        <!-- image -->
-        <div>
-            {% if paid_book.Image_url %}
-                <img src="{{paid_book.Image_url}}" alt="image">
-            {% endif %}
-        </div>
-        <!-- info -->
-        <div>
+        <div class="book_info">
+            <div>
+                {% if paid_book.title %}
+                    <h2>{{paid_book.title}}</h2>
+                {% endif %}
+            </div>
+            <div class="book_info_image">
+                {% if paid_book.Image_url %}
+                    <img src="{{paid_book.Image_url}}" alt="image">
+                {% endif %}
+            </div>
+            <!-- info -->
             <div>
                 {% if paid_book.Authors %}
-                    Auther:{{paid_book.Authors}}
+                    <strong>Auther: </strong>{{paid_book.Authors}}
                 {% endif %}
             </div>
             <div>
                 {% if paid_book.Average_rating %}
-                    Average rating: {{paid_book.Average_rating}}
+                    <strong>Average Rating: </strong> {{paid_book.Average_rating}}
                 {% endif %}
             </div>
             <div>
-                Purchase link: <a href="{{paid_book.link}}">Click Here</a>
+                <strong>Purchase link: </strong> <a href="{{paid_book.link}}">Click Here</a>
             </div>
         </div>
         <!-- actions starts -->
         <div>
-
-            <form action="{% url 'book_to_library' paid_book.id %}" method="post">
+            <form action="{% url 'book_to_library' paid_book.id %}" method="post" class="to_library">
                 {% csrf_token %}
-
                 <input type="submit" name="add to Library" value="Add to Library">
             </form>
             <br>
             
             <form class="rating" method="post" id="{{paid_book.id}}">
                 {% csrf_token %}
-                <button type="submit" data-star="1" onclick="req_rating(this)"
-                    class="fa fa-star  star {% if book_rating >= 1 %}checked{%endif%}"></button>
-                <button type="submit" data-star="2" onclick="req_rating(this)"
-                    class="fa fa-star  star {% if book_rating >= 2 %}checked{%endif%}"></button>
-                <button type="submit" data-star="3" onclick="req_rating(this)"
-                    class="fa fa-star  star {% if book_rating >= 3 %}checked{%endif%}"></button>
-                <button type="submit" data-star="4" onclick="req_rating(this)"
-                    class="fa fa-star  star {% if book_rating >= 4 %}checked{%endif%}"></button>
-                <button type="submit" data-star="5" onclick="req_rating(this)"
-                    class="fa fa-star  star {% if book_rating >= 5 %}checked{%endif%}"></button>
+                <div style="rotate: 270deg; margin-left:20px; height:50px;">
+                <button type="submit" data-star="1" onclick="req_rating(this)" style="rotate: 160deg;"
+                    class="fa fa-star fa-2x star {% if book_rating >= 1 %}checked{%endif%}"></button>
+                <button type="submit" data-star="2" onclick="req_rating(this)" style="rotate: 160deg;"
+                    class="fa fa-star fa-2x star {% if book_rating >= 2 %}checked{%endif%}"></button>
+                <button type="submit" data-star="3" onclick="req_rating(this)" style="rotate: 160deg;"
+                    class="fa fa-star fa-2x star {% if book_rating >= 3 %}checked{%endif%}"></button>
+                <button type="submit" data-star="4" onclick="req_rating(this)" style="rotate: 160deg;"
+                    class="fa fa-star fa-2x star {% if book_rating >= 4 %}checked{%endif%}"></button>
+                <button type="submit" data-star="5" onclick="req_rating(this)" style="rotate: 160deg;"
+                    class="fa fa-star fa-2x star {% if book_rating >= 5 %}checked{%endif%}"></button>
+                </div>
             </form>
 
 
@@ -88,7 +86,7 @@
     <!-- information about the paid book and actions ends -->
 
     <!-- reviews starts -->
-    <div>
+    <div class="review">
         <!-- Write A review starts -->
         <div>
             <form data-id="{{paid_book.id}}" onsubmit="return review(this)">
@@ -102,11 +100,11 @@
             {% for r in reviews reversed %}
                 <div class = "a_review_pbook">
                     <div>
-                        <i class="material-icons" style="font-size:30px;color:rgb(65, 68, 68); margin-right: 5px">account_circle</i>
+                        <i class="material-icons" style="font-size:30px;color:rgb(149, 156, 156); margin-right: 5px">account_circle</i>
                         <span style="padding-bottom:5px;">{{r.User_id.username}}</span>
                         <hr>
                     </div>
-                    <div>
+                    <div class="text_review">
                         {{r.review}}
                     </div>
                     <div class="time">
@@ -151,7 +149,7 @@
                     // alert(document.querySelector('#view_reviews').length);
                     const perantDivNode = document.createElement("div");
                     const user_Div = document.createElement("div");
-                    user_Div.innerHTML = '<i class="material-icons" style="font-size:30px;color:rgb(65, 68, 68); margin-right: 5px">account_circle</i>';
+                    user_Div.innerHTML = '<i class="material-icons" style="font-size:30px;color:rgb(149, 156, 156); margin-right: 5px">account_circle</i>';
                     const spanNode = document.createElement("span");
                     spanNode.innerHTML = result['user'];
                     user_Div.appendChild(spanNode);
@@ -192,6 +190,10 @@
 
     }
 
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+        }
+
     function req_rating(button_star) {
 
         const form = document.querySelector('.rating');
@@ -204,13 +206,14 @@
             // remove();
             event.preventDefault();
             res = [form.id, rating];
-            $.ajax({
+            delay(3000).then(() => $.ajax({
                 type: "GET",
                 url: 'rating_stars',
                 data: {
                     "result[]": res
                 },
-            });
+            }));
+            
         });
 
 

@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib.auth import authenticate, login, logout
@@ -19,6 +20,7 @@ from django.db.models import Q
 from django.core import serializers
 from .free_books import *
 from .paid_books import *
+import time
 
 
 
@@ -44,6 +46,7 @@ def home(request):
     R_free_books = free_books.objects.all()
     # print("hist", f_user_history(request.user))
     out = recommend_with_user_history(f_user_history(request.user), 10000)
+
     ids = []
     for row in out:
         ids.append(int(row["id"].lstrip("PG")))
@@ -81,7 +84,7 @@ def my_library_view(request):
     free_books_lib = free_books_library.objects.filter(User_id = user)
     for paid_book in paid_books_lib:
         b={}
-        print("--------",paid_book.Book_id.id)
+        # print("--------",paid_book.Book_id.id)
         book_info = paid_books.objects.get(id = paid_book.Book_id.id)
         b["index"] = "A"+ str(book_info.id)
         b["book"] = book_info
@@ -92,7 +95,7 @@ def my_library_view(request):
 
     for free_book in free_books_lib:
         b={}
-        print("--------",free_book.Book_id.id)
+        # print("--------",free_book.Book_id.id)
         book_info = free_books.objects.get(id = free_book.Book_id.id)
         b["index"] = "B"+ str(book_info.id)
         b["book"] = book_info 
@@ -101,7 +104,7 @@ def my_library_view(request):
         b["author"] = book_info.Authors
         fbooks.append(b)
 
-    print(pbooks,fbooks)
+    # print(pbooks,fbooks)
 
     return render(request,"book_heaven/myLibrary.html",{
         "user":user,
@@ -113,10 +116,10 @@ def my_library_view(request):
 def remove_lib(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
-    print("*******")
+    # print("*******")
     result_ = request.GET.getlist('result_lib[]', None)  
     # result_[2] = User(result_[2])
-    print("*******",result_)
+    # print("*******",result_)
     user = User.objects.get(id = int(result_[2]))
     if (int(result_[0]) == 1) :
         pbook = paid_books.objects.get(id = int(result_[1]))
@@ -135,7 +138,11 @@ def remove_lib(request):
 def home_paid_books(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
-    R_paid_books = paid_books.objects.all()
+    R_paid_books = []
+    p_out = get_new_user_book_embeddings(book_df, model1_path, model2_path,p_user_history(request.user), 1000)
+
+    for row in p_out:
+        R_paid_books.append(paid_books.objects.get(title=row["title"] ,Authors=row["author"]))
     paginator = Paginator(R_paid_books, 10)
     page = request.GET.get('page')
     recomended_paid_books = 0
@@ -175,61 +182,6 @@ def logout_view(request):
     return render(request, "book_heaven/login.html")
 
 # signup page
-# def signup_view_1(request):
-#     if request.method =="POST":
-#         newUser = {}
-#         newUser['username']= request.POST["username"]
-#         newUser['email'] = request.POST["email"]
-#         newUser['Birthday'] = request.POST["birth"]
-#         newUser['password'] = make_password(request.POST["password"])
-#         nuser= User(username = newUser['username'], email= newUser['email'], Birthday=newUser['Birthday'],password =newUser['password'])
-#         try:
-#             nuser.full_clean()
-#         except ValidationError as e:        
-#             print(e)
-#             return render(request, "book_heaven/signup.html", {
-#                 "message": e
-#             })
-#         else:
-#             # newUser.save()
-#             request.session["user"]=newUser
-#             return HttpResponseRedirect(reverse("signup_helper"))
-
-#     else:
-#        return render(request, "book_heaven/signup.html") 
-    
-# def signup_view_2(request):
-#     pbooks = list(paid_books.objects.all())
-#     result_ = request.GET.getlist('result[]', None)      
-#     u= request.session["user"]
-#     print("****",u)
-#     User.objects.create(username = u['username'], email= u['email'], Birthday=u['Birthday'],password =u['password'])
-#     user_id = User.objects.get(email = u['email'])
-    
-#     print("fffffffffffffff",result_)
-#     for i in range(0,5,2):
-#         print("title",result_[i])        
-#         book_id = paid_books.objects.filter(title = result_[i]).first()
-#         paid_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
-#     for i in range(6,11,2):
-#         print("title",result_[i])    
-#         book_id = free_books.objects.filter(title = result_[i]).first()        
-#         free_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
-#     return  HttpResponseRedirect(reverse("login"))
-   
-
-# def signup_helper(request):
-#     pbooks = list(paid_books.objects.values_list('title', flat=True))
-#     fbooks = list(free_books.objects.all().order_by('-Download_count').values_list('title', flat=True))[0:50000]
-#     # fbook_html = serializers.serialize("json",fbooks)
-#     # pbook_html = serializers.serialize("json",pbooks)
-#     return render(request, "book_heaven/signup_continue.html",{
-#         "pbooks" : pbooks,
-#         "fbooks" : fbooks,
-#         "fbooks_js": json.dumps(fbooks),
-#         "pbooks_js": json.dumps(pbooks)
-#     }) 
-# signup page
 def signup_view_1(request):
     if request.method =="POST":
         newUser = {}
@@ -241,7 +193,7 @@ def signup_view_1(request):
         try:
             nuser.full_clean()
         except ValidationError as e:        
-            print(e)
+            # print(e)
             return render(request, "book_heaven/signup.html", {
                 "message": e
             })
@@ -257,17 +209,17 @@ def signup_view_2(request):
     pbooks = list(paid_books.objects.all())
     result_ = request.GET.getlist('result[]', None)      
     u= request.session["user"]
-    print("****",u)
+    # print("****",u)
     User.objects.create(username = u['username'], email= u['email'], Birthday=u['Birthday'],password =u['password'])
     user_id = User.objects.get(email = u['email'])
     
-    print("fffffffffffffff",result_)
+    # print("fffffffffffffff",result_)
     for i in range(0,5,2):
-        print("title",result_[i])        
+        # print("title",result_[i])        
         book_id = paid_books.objects.filter(title = result_[i]).first()
         paid_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
     for i in range(6,11,2):
-        print("title",result_[i])    
+        # print("title",result_[i])    
         book_id = free_books.objects.filter(title = result_[i]).first()        
         free_books_rating.objects.create(User_id= user_id,Book_id = book_id,rating = int(result_[i+1]))
     return  HttpResponseRedirect(reverse("login"))
@@ -284,6 +236,9 @@ def signup_helper(request):
         "fbooks_js": json.dumps(fbooks),
         "pbooks_js": json.dumps(pbooks)
     }) 
+
+
+
 # account page
 def myAccount_view(request):
     if not request.user.is_authenticated:
@@ -322,32 +277,42 @@ def fbook_to_library(request,free_book_id):
     
     return  HttpResponseRedirect(reverse("free_book", kwargs={'free_book_id':free_book_id}))
 
+
 def rating_stars(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
     result_ = request.GET.getlist('result[]', None)
     user = User.objects.get(id= request.user.id) 
-    book = paid_books.objects.get(id = result_[0])
+    book = paid_books.objects.get(id = int(result_[0]))
+    
     rating_ = int(result_[1]) 
+    # print("isaaaaaaa",book,user,rating_)
     exists = False
+    e = None
     try:
         e = paid_books_rating.objects.get(User_id = user, Book_id = book)
+        # print("exist ",e)
         exists = True
-    except paid_books_rating.DoesNotExist:    
-        paid_books_rating.objects.create(User_id = user, Book_id = book, rating=rating_)  
-    if(exists):
-        
+    except paid_books_rating.DoesNotExist:   
+        # print("except") 
+        paid_books_rating.objects.create(User_id = user, Book_id = book, rating=rating_) 
+        # print("create ") 
+        time.sleep(3)
+    if(exists):        
         if((e.rating) != rating_):
+            # print("ratiiiing",e.rating,rating_)
             e.delete()
             paid_books_rating.objects.create(User_id = user, Book_id = book, rating=rating_)
-    return  HttpResponseRedirect(reverse("paid_book", kwargs={'paid_book_id':result_[0]}))        
+            # print("neeeew")
+            time.sleep(3)
+    return  HttpResponseRedirect(reverse("paid_book", kwargs={'paid_book_id': int(result_[0])}))
 
 def frating_stars(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
     result_ = request.GET.getlist('result[]', None)
     user = User.objects.get(id= request.user.id) 
-    book = free_books.objects.get(id = result_[0])
+    book = free_books.objects.get(id = int(result_[0]))
     rating_ = int(result_[1]) 
     exists = False
     try:
@@ -359,14 +324,15 @@ def frating_stars(request):
         if((e.rating) != rating_):
             e.delete()
             free_books_rating.objects.create(User_id = user, Book_id = book, rating=rating_)
-    return  HttpResponseRedirect(reverse("free_book", kwargs={'free_book_id':result_[0]}))  
+    return  HttpResponseRedirect(reverse("free_book", kwargs={'free_book_id':int(result_[0])}))  
 
 def search_view(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("start"))
     # out list is the output of recommendation fn of free books
     # print("Aya",book2book_encoded)
-    print("Ayaaa",book_df)
+    aya = { "The Fault in Our Stars":5, "Pride and Prejudice": 4, "Little Women (Little Women, #1)": 3}
+    
     if request.method =="POST":
         searched = request.POST["searched"]
         fbooks = []
@@ -379,6 +345,7 @@ def search_view(request):
         ptest = psearched[10:20]
         # print("*****************",fsearched)
         out = recommend_with_user_history(f_user_history(request.user), 700)
+        p_out = get_new_user_book_embeddings(book_df, model1_path, model2_path,p_user_history(request.user), 30)
         # print("out     :", out)
         for i in range(0,len(out)):
             if int(out[i]["id"].lstrip("PG")) in fsearched :              
@@ -453,7 +420,7 @@ def upload_library(request):
         fs = FileSystemStorage()
         filename = fs.save(library.name, library)
         uploaded_file_url = fs.url(filename)
-        print(uploaded_file_url[1:] == "media/"+filename)
+        # print(uploaded_file_url[1:] == "media/"+filename)
         f = 0
         try:
             f = open (uploaded_file_url[1:], encoding="utf8")     
@@ -525,17 +492,17 @@ def free_book_read(request, free_book_id):
             s= soup.img.extract()
         soup.title.string.replace_with(free_book.title)
         nav = soup.new_tag("nav")
-        # nav
+        nav["style"] = "margin-top: 0px;"
         # nav['class'] = "hi"
         ul = soup.new_tag("ul")
-        ul['style'] = "list-style-type: none; margin: 0; padding: 0; overflow: hidden; background-color: #333;"
+        ul['style'] = "list-style-type: none; margin: 0; padding: 0; overflow: hidden; background-color:rgb(10, 10, 39);"
          # about us
         li0 = soup.new_tag("li")
         li0['style'] = "float: left;"
         a0 = soup.new_tag("a")
         a0['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a0['href'] = "../../about_us"
-        a0.string = "About us"
+        a0['href'] = "../../"
+        a0.string = "Home"
         li0.insert(0, a0)
         ul.insert(0, li0)
         # home
@@ -543,8 +510,8 @@ def free_book_read(request, free_book_id):
         li1['style'] = "float: left;"
         a1 = soup.new_tag("a")
         a1['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a1['href'] = "../../"
-        a1.string = "Home"
+        a1['href'] = "../../home/my_library"
+        a1.string = "My Library"
         li1.insert(0, a1)
         ul.insert(1, li1)
         # account
@@ -552,8 +519,8 @@ def free_book_read(request, free_book_id):
         li2['style'] = "float: left;"
         a2 = soup.new_tag("a")
         a2['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a2['href'] = "../../myAccount"
-        a2.string = "My Account"
+        a2['href'] = "../../home/search"
+        a2.string =  "Search"
         li2.insert(0, a2)
         ul.insert(2, li2)
         # library
@@ -561,8 +528,8 @@ def free_book_read(request, free_book_id):
         li3['style'] = "float: left;"
         a3 = soup.new_tag("a")
         a3['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a3['href'] = "../../home/my_library"
-        a3.string = "My Library"
+        a3['href'] = "../../about_us"
+        a3.string = "About us"
         li3.insert(0, a3)
         ul.insert(3, li3)
         # Search
@@ -570,8 +537,8 @@ def free_book_read(request, free_book_id):
         li4['style'] = "float: left;"
         a4 = soup.new_tag("a")
         a4['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a4['href'] = "../../home/search"
-        a4.string = "Search"
+        a4['href'] = "../../logout"
+        a4.string = "Log Out"
         li4.insert(0, a4)
         ul.insert(4, li4)
         # log out
@@ -579,8 +546,8 @@ def free_book_read(request, free_book_id):
         li5['style'] = "float: left;"
         a5 = soup.new_tag("a")
         a5['style'] = "display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;"
-        a5['href'] = "../../logout"
-        a5.string = "Log Out"
+        a5['href'] = "../../myAccount"
+        a5.string = "My Account"
         li5.insert(0, a5)
         ul.insert(5, li5)
         nav.insert(0, ul)
@@ -614,6 +581,7 @@ def free_book_read(request, free_book_id):
 
     return HttpResponse("read")
 
+
 # review free book
 @csrf_exempt
 @login_required
@@ -625,8 +593,8 @@ def review_free_book(request):
         free_book_id = data.get("free_book_id")
         review = data.get("review")
         free_book = free_books.objects.get(id = free_book_id)
-        print(review)
-        print(request.user.id)
+        # print(review)
+        # print(request.user.id)
         new_review = free_books_review(User_id = request.user, Book_id = free_book, review = review)
         new_review.save()
         return JsonResponse({"success": "added", "user":request.user.username}, status=400)
@@ -667,3 +635,6 @@ def review_paid_book(request):
         new_review.save()
         return JsonResponse({"success": "added", "user":request.user.username}, status=400)
     return JsonResponse({"error": "invalid request"}, status=400)
+
+
+

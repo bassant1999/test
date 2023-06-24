@@ -35,7 +35,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="buttons">
+            <div class="buttons_home">
                 {% if recomended_free_books.has_previous %}
                     <a href="?page={{recomended_free_books.previous_page_number}}">Previous</a>
                 {% else %}
@@ -52,4 +52,13 @@
     {% else %}
         <h1>Not Signed in, Please Sign in first</h1>
     {% endif %}
+    <div style="margin: 100px;"></div>
+    <div class="contact_us">
+        <h2>Contact us</h2>
+        
+        <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+        <a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+        <a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+        
+    </div>
 {% endblock %}

@@ -27,19 +27,22 @@
             fbook_div.appendChild(img);
         }
         if (contents.title) {
-            title = document.createElement('div');
+            title = document.createElement('h3');
+            title.setAttribute("class","search_txt");
             title.innerHTML = `Title : ${contents.title}`
             fbook_div.appendChild(title);
         }
 
 
         if (contents.Authors) {
-            author = document.createElement('div');
+            author = document.createElement('h3');
+            author.setAttribute("class","search_txt");
             author.innerHTML = `Authors : ${contents.Authors}`
             fbook_div.appendChild(author);
         }
         if (contents.Download_count) {
-            d_count = document.createElement('div');
+            d_count = document.createElement('h3');
+            d_count.setAttribute("class","search_txt");
             d_count.innerHTML = `Number of Downloads: ${contents.Download_count}`
             fbook_div.appendChild(d_count);
         }
@@ -68,19 +71,22 @@
             pbook_div.appendChild(img);
         }
         if (contents.title) {
-            title = document.createElement('div');
+            title = document.createElement('h3');
+            title.setAttribute("class","search_txt");
             title.innerHTML = `Title : ${contents.title}`
             pbook_div.appendChild(title);
         }
 
 
         if (contents.Authors) {
-            author = document.createElement('div');
+            author = document.createElement('h3');
+            author.setAttribute("class","search_txt");
             author.innerHTML = `Authors : ${contents.Authors}`
             pbook_div.appendChild(author);
         }
         if (contents.Average_rating) {
-            avg_rating = document.createElement('div');
+            avg_rating = document.createElement('h3');
+            avg_rating.setAttribute("class","search_txt");
             avg_rating.innerHTML = `Average rating : ${contents.Average_rating}`
             pbook_div.appendChild(avg_rating);
         }
@@ -231,6 +237,9 @@
             window.onscroll = () => {
                 if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
                     load(searched);
+                    // const con = document.getElementById("con_us");
+                    // con.classList.remove("contact_us_abs");
+                    // con.classList.add("contact_us");
                 }
             };
         }
@@ -239,6 +248,10 @@
     function show_pbooks() {
         const pbooks = document.getElementById("btn_pbooks");
         const fbooks = document.getElementById("btn_fbooks");
+        // const con = document.getElementById("con_us");
+        // con.classList.remove("contact_us_abs");
+        // con.classList.add("contact_us");
+        
         // pbooks.classList.remove("btn btn-secondary");
         // pbooks.classList.add("btn btn-primary");
         // fbooks.classList.add("btn btn-secondary");
@@ -255,6 +268,9 @@
     function show_fbooks() {
         const pbooks = document.getElementById("btn_pbooks");
         const fbooks = document.getElementById("btn_fbooks");
+        
+        
+        
         // pbooks.classList.add("btn btn-secondary");
         // pbooks.classList.remove("btn btn-primary");
         // fbooks.classList.remove("btn btn-secondary");
@@ -274,7 +290,7 @@
 
 
 </script>
-
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 <style>
     .hidden {
         display: None;
@@ -288,73 +304,89 @@
 <form action="{% url 'search' %}" method="post">
     {% csrf_token %}
     {% if searched_value %}
-    <input type="text" , name="searched" , placeholder="Search by title or author" value="{{searched_value}}">
+    <input type="text"  class="search_form" name="searched"  placeholder="Search by title or author" value="{{searched_value}}">
     {% else %}
-    <input type="text" , name="searched" , placeholder="Search by title or author">
+    <input type="text"  class="search_form" name="searched"  placeholder="Search by title or author">
     {% endif %}
-    <input type="submit" , value="Search">
+    <!-- <input type="submit"  value="Search" class="search_btn">  -->
+    <button type="submit"  class="search_btn">Search </button>
+    <!-- <i class='fas fa-search' style='font-size:36px ;left:25opx; position:absolute;'></i> -->
 </form>
+<!-- <i class="fas fa-search"></i> -->
+{% if searched_value %}
+{% else %}
+<div class="contact_us_abs" >
+    <h2>Contact us</h2>
+    
+    <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    
+</div>
+{% endif %}
 <br />
 <br />
 {% if searched_value %}
 <div>
-    You searched for {{searched_value}}
+    <!-- You searched for {{searched_value}} -->
     <br />
     <br />
     <button onclick="show_pbooks()" id="btn_pbooks" class="btn btn-secondary">Paid books</button>
     <button onclick="show_fbooks()" id="btn_fbooks" class="btn btn-secondary">Free books</button>
+    <!-- <div style="margin: 100px;"></div> -->
+    
 </div>
 <div id="{{searched_value}}" class="search_results row">
 
     <div id="pbooks_div" class="col-md-6 hidden">
-        Paid books
+        
         <br />
         <br />
         {% if pbooks|length > 0 %}
-        <p>Your recommended search results </p>
+        <b class="search_msg">Your recommended search results </b>
         <br />
         {% for pbook in pbooks %}
         <div>
             {% if pbook.Image_url%}
-            <img src={{pbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+            <img src={{pbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
             <br />
             {% endif %}
             {% if pbook.title %}
-            Title : {{pbook.title}}
-            <br />
+            <h3 class="search_txt"> Title : {{pbook.title}}</h3>
+            
             {% endif %}
             {% if pbook.Authors%}
-            Author : {{pbook.Authors}}
-            <br />
+            <h3 class="search_txt">Author : {{pbook.Authors}} </h3>
+            
             {% endif %}
             {%if pbook.Average_rating%}
-            Average_rating : {{pbook.Average_rating}}
-            <br />
+            <h3 class="search_txt">Average_rating : {{pbook.Average_rating}} </h3>
+            
             {% endif %}
             <a href="{% url 'paid_book' pbook.id %}">View</a>
             <br />
             <br />
         </div>
         {% endfor %}
-        {% if pbooks|length < 10 %} <b> Search results from all dataset</b>
+        {% if pbooks|length < 10 %} <b class="search_msg"> Search results from all dataset</b>
             <br />
             {% for dbpbook in dbpbooks %}
             <div>
                 {% if dbpbook.Image_url%}
-                <img src={{dbpbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <img src={{dbpbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
                 <br />
                 {% endif %}
                 {% if dbpbook.title %}
-                Title : {{dbpbook.title}}
-                <br />
+                <h3 class="search_txt">Title : {{dbpbook.title}}</h3>
+                
                 {% endif %}
                 {% if dbpbook.Authors%}
-                Author : {{dbpbook.Authors}}
-                <br />
+                <h3 class="search_txt">Author : {{dbpbook.Authors}}</h3>
+                
                 {% endif %}
                 {%if dbpbook.Average_rating%}
-                Average_rating : {{dbpbook.Average_rating}}
-                <br />
+                <h3 class="search_txt">Average_rating : {{dbpbook.Average_rating}}</h3>
+                
                 {% endif %}
                 <a href="{% url 'paid_book' dbpbook.id %}">View</a>
                 <br />
@@ -363,28 +395,28 @@
             {% endfor %}
             {% endif %}
             {% else %}
-            <p>Unfortunately, no recommended search results </p>
+            <p class="search_msg_s">Unfortunately, no recommended search results </p>
             <br />
             {% if dbpbooks|length > 0 %}
-            <b> Search results from all dataset</b>
+            <b class="search_msg"> Search results from all dataset</b>
             <br />
             {% for dbpbook in dbpbooks %}
             <div>
                 {% if dbpbook.Image_url%}
-                <img src={{dbpbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <img src={{dbpbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
                 <br />
                 {% endif %}
                 {% if dbpbook.title %}
-                Title : {{dbpbook.title}}
-                <br />
+                <h3 class="search_txt">Title : {{dbpbook.title}} </h3>
+                
                 {% endif %}
                 {% if dbpbook.Authors%}
-                Author : {{dbpbook.Authors}}
-                <br />
+                <h3 class="search_txt">Author : {{dbpbook.Authors}} </h3>
+                
                 {% endif %}
                 {%if dbpbook.Average_rating%}
-                Average_rating : {{dbpbook.Average_rating}}
-                <br />
+                <h3 class="search_txt">Average_rating : {{dbpbook.Average_rating}} </h3>
+                
                 {% endif %}
                 <a href="{% url 'paid_book' dbpbook.id %}">View</a>
                 <br />
@@ -392,61 +424,61 @@
             </div>
             {% endfor %}
             {% else %}
-            <b> Unfortunately, no search results from all dataset</b>
+            <p class="search_msg_s"> Unfortunately, no search results from all dataset</p>
             <br />
             {% endif %}
             {% endif %}
     </div>
 
     <div id="fbooks_div" class="col-md-6 hidden">
-        Free books
+        
         <br />
         <br />
         {% if fbooks|length > 0 %}
-        <p>Your recommended search results </p>
+        <b class="search_msg">Your recommended search results </b>
         <br />
         {% for fbook in fbooks %}
         <div>
             {% if fbook.Image_url%}
-            <img src={{fbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+            <img src={{fbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
             <br />
             {% endif %}
             {% if fbook.title %}
-            Title : {{fbook.title}}
-            <br />
+            <h3 class="search_txt">Title : {{fbook.title}} </h3>
+            
             {% endif %}
             {% if fbook.Authors %}
-            Author : {{fbook.Authors}}
-            <br />
+            <h3 class="search_txt">Author : {{fbook.Authors}} </h3>
+            
             {% endif %}
             {% if fbook.Download_count %}
-            Number of Downloads: {{fbook.Download_count}}
-            <br />
+            <h3 class="search_txt">Number of Downloads: {{fbook.Download_count}} </h3>
+            
             {% endif %}
             <a href="{% url 'free_book' fbook.id %}">View</a>
             <br />
             <br />
         </div>
         {% endfor %}
-        {% if fbooks|length < 10 %} <b> Search results from all dataset</b>
+        {% if fbooks|length < 10 %} <b class="search_msg"> Search results from all dataset</b>
             <br />
             {% for dbfbook in dbfbooks %}
             <div>
                 {% if dbfbook.Image_url%}
-                <img src={{dbfbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <img src={{dbfbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
                 <br />
                 {% endif %}
                 {% if dbfbook.title %}
-                Title : {{dbfbook.title}}
-                <br />
+                <h3 class="search_txt">Title : {{dbfbook.title}} </h3>
+                
                 {% endif %}
                 {% if dbfbook.Authors %}
-                Author : {{dbfbook.Authors}}
-                <br />
+                <h3 class="search_txt">Author : {{dbfbook.Authors}} </h3>
+                
                 {% endif %}
                 {% if dbfbook.Download_count %}
-                Number of Downloads: {{dbfbook.Download_count}}
-                <br />
+                <h3 class="search_txt">Number of Downloads: {{dbfbook.Download_count}} </h3>
+                
                 {% endif %}
                 <a href="{% url 'free_book' dbfbook.id %}">View</a>
                 <br />
@@ -455,28 +487,28 @@
             {% endfor %}
             {% endif %}
             {% else %}
-            <p>Unfortunately, no recommended search results </p>
+            <p class="search_msg_s">Unfortunately, no recommended search results </p>
             <br />
             {% if dbfbooks|length > 0 %}
-            <b> Search results from all dataset</b>
+            <b class="search_msg"> Search results from all dataset</b>
             <br />
             {% for dbfbook in dbfbooks %}
             <div>
                 {% if dbfbook.Image_url%}
-                <img src={{dbfbook.Image_url}} alt="book_image" style="width:200px; height: 300px;">
+                <img src={{dbfbook.Image_url}} alt="book_image" style="width:150px; height: 200px;">
                 <br />
                 {% endif %}
                 {% if dbfbook.title %}
-                Title : {{dbfbook.title}}
-                <br />
+                <h3 class="search_txt">Title : {{dbfbook.title}} </h3>
+                
                 {% endif %}
                 {% if dbfbook.Authors %}
-                Author : {{dbfbook.Authors}}
-                <br />
+                <h3 class="search_txt">Author : {{dbfbook.Authors}} </h3>
+                
                 {% endif %}
                 {% if dbfbook.Download_count %}
-                Number of Downloads: {{dbfbook.Download_count}}
-                <br />
+                <h3 class="search_txt">Number of Downloads: {{dbfbook.Download_count}} </h3>
+                
                 {% endif %}
                 <a href="{% url 'free_book' dbfbook.id %}">View</a>
                 <br />
@@ -484,12 +516,23 @@
             </div>
             {% endfor %}
             {% else %}
-            <b> Unfortunately, no search results from all dataset</b>
+            <p class="search_msg_s"> Unfortunately, no search results from all dataset</p>
             <br />
             {% endif %}
             {% endif %}
     </div>
 </div>
+<!-- <div style="margin: 400px;"></div> -->
+<div  id="con_us">
+    <h2>Contact us</h2>
+    
+    <a href="mailto:fatmabadr1272000@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:bassantmahmoud1010@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    <a href="mailto:ayahassan.holmez@gmail.com"><i class="material-icons" style="font-size:36px">email</i></a>
+    
+</div>
 {% endif %}
+
+
 
 {% endblock %}
